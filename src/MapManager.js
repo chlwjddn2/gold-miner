@@ -7,8 +7,8 @@ export default class MapManager {
   loadAssets() {
     console.log('load map');
     
-    this.scene.load.tilemapTiledJSON("map", "/map.json");
-    this.scene.load.spritesheet('minerals', '/mineral.png', {
+    this.scene.load.tilemapTiledJSON("map", "./map.json");
+    this.scene.load.spritesheet('minerals', './mineral.png', {
       frameWidth: 350,
       frameHeight: 350
     });

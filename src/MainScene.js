@@ -20,24 +20,24 @@ export default class MainScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', '/background3.png');
-    this.load.image('rope', '/rope.png');
-    this.load.image('saw', '/saw.png');
-    this.load.spritesheet('player', '/player.png', {
+    this.load.image('background', './background3.png');
+    this.load.image('rope', './rope.png');
+    this.load.image('saw', './saw.png');
+    this.load.spritesheet('player', './player.png', {
       frameWidth: 116,
       frameHeight: 116
     })
     
-    this.load.spritesheet('lever', '/lever.png', {
+    this.load.spritesheet('lever', './lever.png', {
       frameWidth: 84,
       frameHeight: 84,
     });
 
-    this.load.image('diamond', '/diamond.png');
-    this.load.tilemapTiledJSON('map', '/map.json');
+    this.load.image('diamond', './diamond.png');
+    this.load.tilemapTiledJSON('map', './map.json');
     
 
-    this.load.spritesheet('minerals', '/mineral.png', {
+    this.load.spritesheet('minerals', './mineral.png', {
       frameWidth: 374,
       frameHeight: 355
     });
