@@ -39,7 +39,7 @@ export default class GameOverScene extends Phaser.Scene {
     this.mainMenuButton.on('pointerdown', () => {
       this.scene.stop();
       this.scene.stop('MainScene');
-      this.scene.start('MainMenuScene');
+      this.scene.start('GameStartScene');
     })
 
     // 키보드 입력
@@ -52,7 +52,7 @@ export default class GameOverScene extends Phaser.Scene {
     this.input.keyboard.on('keydown-M', () => {
       this.scene.stop();
       this.scene.stop('MainScene');
-      this.scene.start('MainMenuScene');
+      this.scene.start('GameStartScene');
     });
   }
 }

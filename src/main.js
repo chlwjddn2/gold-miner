@@ -3,6 +3,7 @@ import './style.css'
 import MainScene from './MainScene';
 import GameOverScene from './GameOverScene';
 import GameStartScene from './GameStartScene';
+import LevelDoneScene from './LevelDoneScene';
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -14,8 +15,9 @@ class Game{
     height: 720,
 		backgroundColor: '#88C2F6',
     scene: [
-      MainScene,
       GameStartScene,
+      MainScene,
+      LevelDoneScene,
       GameOverScene,
     ],
     parent: 'container',

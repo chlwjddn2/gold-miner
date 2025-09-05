@@ -1,54 +1,57 @@
-import MapManager from './MapManager.js';
-import ScoreBoard from './ScoreBoard.js';
-
-
 export default class MainScene extends Phaser.Scene {
   constructor() {
     super('MainScene');
-    
-    this.lineMoving = false;      // 선 늘어나는 상태
-    this.lineShrinking = false;   // 선 줄어드는 상태
+  }
 
-    this.swingTime = 0;           // 스윙 계산용 시간
-    this.lineLength = 100;        // 현재 선 길이
-    this.baseSpeed = 10;          // 선 늘어나고 줄어드는 기본 속도
-    this.currentAngle = 0;        // 스윙 멈출 때 각도 저장
-    this.angle = 0;
-
-    this.mapManager = new MapManager(this); // map 생성
-    this.scoreBoard = new ScoreBoard(this);
+  init(data) {
+    this.level = data?.level ?? 1;
+    this.score = data?.score ?? 0;
+    this.targetScore = data?.targetScore ?? 650;
+    this.timeLeft = 60;
   }
 
   preload() {
     this.load.image('background', './background3.png');
     this.load.image('rope', './rope.png');
     this.load.image('saw', './saw.png');
-    this.load.spritesheet('player', './player.png', {
-      frameWidth: 116,
-      frameHeight: 116
-    })
-    
-    this.load.spritesheet('lever', './lever.png', {
-      frameWidth: 84,
-      frameHeight: 84,
-    });
+    this.load.spritesheet('player', './player.png', { frameWidth: 116, frameHeight: 116 });
+    this.load.spritesheet('lever', './lever.png', { frameWidth: 84, frameHeight: 84 });
+    this.load.spritesheet('minerals', './mineral.png', { frameWidth: 374, frameHeight: 355 });
 
     this.load.image('diamond', './diamond.png');
-    this.load.tilemapTiledJSON('map', './map.json');
-    
 
-    this.load.spritesheet('minerals', './mineral.png', {
-      frameWidth: 374,
-      frameHeight: 355
-    });
+    this.scoreText = this.add.text(1000, 36, `score : ${this.score}`, {
+      fontSize: '32px',
+      fill: '#000000',
+      fontFamily: 'Pretendard',
+    }).setDepth(100);
 
-    this.mapManager.loadAssets(); // map asset load
-    this.scoreBoard.loadScoreBoard(); // map asset load
-    this.scoreBoard.startTimer(60); 
+    this.targetScoreText = this.add.text(1000, 76, `target : ${this.targetScore}`, {
+      fontSize: '32px',
+      fill: '#000000',
+      fontFamily: 'Pretendard',
+    }).setDepth(100);
+
+    this.timerText = this.add.text(1000, 116, `time : ${this.timeLeft}`, {
+      fontSize: '32px',
+      fill: '#000000',
+      fontFamily: 'Pretendard',
+    }).setDepth(100);
+
+    this.levelText = this.add.text(1000, 156, `level : ${this.level}`, {   // 추가
+      fontSize: '32px',
+      fill: '#000000',
+      fontFamily: 'Pretendard',
+    }).setDepth(100);
+
+    this.startTimer(60); 
+    this.load.tilemapTiledJSON("map", `./map${this.level}.json`);
+
   }
 
   create() {
     const { width, height } = this.cameras.main;
+    this.#initStatus();
 
     this.background = this.add.tileSprite(0, 0, width, height, 'background').setOrigin(0, 0); // 배경
     this.lever = this.add.sprite(width / 2, 176, 'lever').setDepth(5);
@@ -57,6 +60,8 @@ export default class MainScene extends Phaser.Scene {
     this.saw.setBody({ type: 'circle', radius: 10 });
     this.cursors = this.input.keyboard.createCursorKeys(); // 키 입력
     this.player = this.add.sprite(width / 2 + 80, 160, 'player').setDepth(10).setFlipX(true).setDepth(5); // 플레이어 이미지 설정
+
+    this.createMap(); // 맵 생성
 
     this.cursors.down.on('down', () => {
       if (this.lineMoving || this.lineShrinking) return;
@@ -71,17 +76,8 @@ export default class MainScene extends Phaser.Scene {
       this.currentAngle = Math.sin(this.swingTime) * (Math.PI / 2.5); // 현재 스윙 각도 저장
       this.player.setFrame(1);
     })
-
-    this.mapManager.createMap(); // 맵 생성
-    
     this.matter.world.on('collisionstart', (event) => {
-      event.pairs.forEach(pair => {
-        const { bodyA, bodyB } = pair;
-        const labelA = bodyA.gameObject?.texture?.key;
-        const labelB = bodyB.gameObject?.texture?.key;
-        if (![labelA, labelB].includes('saw') || ![labelA, labelB].includes('minerals')) return;
-        this.handleSawCollision(bodyA, bodyB);
-      });
+      event.pairs.forEach((pair) => this.handleSawCollision(pair.bodyA, pair.bodyB));
     });
   }
 
@@ -92,6 +88,17 @@ export default class MainScene extends Phaser.Scene {
 
     // rope의 길이 및 각도 계산하여 업데이트
     this.updateRope(this.angle);
+  }
+
+  #initStatus() {
+    this.lineMoving = false;      // 선 늘어나는 상태
+    this.lineShrinking = false;   // 선 줄어드는 상태
+    this.swingTime = 0;           // 스윙 계산용 시간
+    this.lineLength = 100;        // 현재 선 길이
+    this.baseSpeed = 10;          // 선 늘어나고 줄어드는 기본 속도
+    this.currentAngle = 0;        // 스윙 멈출 때 각도 저장
+    this.angle = 0;
+    this.attachedObject = null;
   }
 
   updateRope(angle) {
@@ -127,7 +134,7 @@ export default class MainScene extends Phaser.Scene {
       // 🔥 붙어있던 오브젝트 처리
       if (this.attachedObject) {
         this.attachedObject.destroy(); // 혹은 점수 추가 등 원하는 처리
-        this.scoreBoard.updateScore(this.attachedObject.price);
+        this.updateScore(this.attachedObject.price);
         this.attachedObject = null;
         this.baseSpeed = 10;
       }
@@ -156,5 +163,57 @@ export default class MainScene extends Phaser.Scene {
     this.attachedObject = object.gameObject;
     this.matter.world.remove(object);
     this.baseSpeed = Math.floor(10 - (this.attachedObject.weight / 100) * (10 - 1));
+  }
+
+  startTimer(duration = 60) {
+    this.timeLeft = duration;
+    this.timerText.setText(`time : ${this.timeLeft}`);
+
+    // 1초마다 timeLeft 감소 
+    this.timerEvent = this.time.addEvent({
+      delay: 1000, // 1초
+      callback: () => {
+        this.timeLeft--;
+        this.timerText.setText(`time : ${this.timeLeft}`);
+        if (this.timeLeft <= 0) this.onTimerEnd();
+      },
+      callbackScope: this,
+      loop: true,
+    });
+  }
+
+  onTimerEnd() {
+    if (this.score <= this.targetScore) this.scene.launch('GameOverScene');
+    else this.scene.launch('LevelDoneScene', {level: this.level, score: this.score, targetScore: this.targetScore });
+    this.scene.pause();        
+  }
+
+  updateScore(amount) {
+    this.score += amount;
+    this.scoreText.setText(`score : ${this.score}`);
+  }
+
+  createMap() {
+    const randomNunber = Phaser.Math.Between(1, 2);
+    const map = this.make.tilemap({ key: "map" });
+    const objectLayer = map.getObjectLayer(`Object Layer ${randomNunber}`);
+    const tileSets = map.getTileset("mineral");
+
+    objectLayer.objects.forEach((obj) => {
+      const x = Math.floor(obj.x);
+      const y = Math.floor(obj.y) - 80;
+      const gid = obj.gid - 1;
+
+      const sprite = this.matter.add.sprite(x, y, "minerals", gid);
+      const objectData = tileSets.tileData[gid]?.objectgroup?.objects[0];
+      const verts = objectData?.polygon?.map(poly => ({ x: poly.x + 100, y: poly.y + 100 }));
+      
+      if (verts) sprite.setBody({ type: 'fromVertices', verts });
+      
+      sprite.setDisplaySize(obj.width, obj.height);
+      sprite.price = Number(obj.properties.find((property) => property.name === 'price').value);
+      sprite.weight = Number(obj.properties.find((property) => property.name === 'weight').value);
+      
+    });
   }
 }
