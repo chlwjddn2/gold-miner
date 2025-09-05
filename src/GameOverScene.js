@@ -13,18 +13,24 @@ export default class GameOverScene extends Phaser.Scene {
     this.add.text(width / 2, height / 2 - 100, '💀 GAME OVER 💀', {
       fontSize: '48px',
       fill: '#ffffff',
+      fontFamily: 'Daeojamjil',
+      fontStyle: 'bold'
     }).setOrigin(0.5);
 
     // [R] Restart Game - 중앙
     this.reStartButton = this.add.text(width / 2, height / 2, '[ R ] Restart Game', {
       fontSize: '24px',
       fill: '#ffff00',
+      fontFamily: 'Daeojamjil',
+      fontStyle: 'bold'
     }).setOrigin(0.5);
 
     // [M] Main Menu - 중앙 하단
     this.mainMenuButton = this.add.text(width / 2, height / 2 + 50, '[ M ] Main Menu', {
       fontSize: '24px',
       fill: '#ffff00',
+      fontFamily: 'Daeojamjil',
+      fontStyle: 'bold'
     }).setOrigin(0.5);
 
     this.reStartButton.setInteractive({ useHandCursor: true });

@@ -23,25 +23,29 @@ export default class MainScene extends Phaser.Scene {
     this.scoreText = this.add.text(1000, 36, `score : ${this.score}`, {
       fontSize: '32px',
       fill: '#000000',
-      fontFamily: 'Pretendard',
+      fontFamily: 'Daeojamjil',
+      fontStyle: 'bold'
     }).setDepth(100);
 
     this.targetScoreText = this.add.text(1000, 76, `target : ${this.targetScore}`, {
       fontSize: '32px',
       fill: '#000000',
-      fontFamily: 'Pretendard',
+      fontFamily: 'Daeojamjil',
+      fontStyle: 'bold'
     }).setDepth(100);
 
     this.timerText = this.add.text(1000, 116, `time : ${this.timeLeft}`, {
       fontSize: '32px',
       fill: '#000000',
-      fontFamily: 'Pretendard',
+      fontFamily: 'Daeojamjil',
+      fontStyle: 'bold'
     }).setDepth(100);
 
     this.levelText = this.add.text(1000, 156, `level : ${this.level}`, {   // 추가
       fontSize: '32px',
       fill: '#000000',
-      fontFamily: 'Pretendard',
+      fontFamily: 'Daeojamjil',
+      fontStyle: 'bold'
     }).setDepth(100);
 
     this.startTimer(60); 

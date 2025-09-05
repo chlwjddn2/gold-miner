@@ -15,17 +15,23 @@ export default class LevelDoneScene extends Phaser.Scene {
     this.add.text(width / 2, height / 2 - 100, '🎇 Level Done! 🎇', {
       fontSize: '48px',
       fill: '#ffffff',
+      fontFamily: 'Daeojamjil',
+      fontStyle: 'bold'
     }).setOrigin(0.5);
 
     this.add.text(width / 2, height / 2 + 50, `Score: ${this.score}`, {
       fontSize: '48px',
       fill: '#ffffff',
+      fontFamily: 'Daeojamjil',
+      fontStyle: 'bold'
     }).setOrigin(0.5);
 
     // [R] Restart Game - 중앙
     this.nexLevelButton = this.add.text(width / 2, height / 2 + 100, 'Next Level', {
       fontSize: '24px',
       fill: '#ffff00',
+      fontFamily: 'Daeojamjil',
+      fontStyle: 'bold'
     }).setOrigin(0.5);
 
     this.nexLevelButton.setInteractive({ useHandCursor: true });
