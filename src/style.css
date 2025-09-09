@@ -30,6 +30,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+  overflow: hidden;
 }
 ol, ul {
 	list-style: none;
@@ -59,4 +60,33 @@ table {
 	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil1Thin.woff2') format('woff2');
 	font-weight: 100;
 	font-display: swap;
+}
+
+.howto-container,
+.quiz-container {
+	position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  display: flex; 
+  padding: 10rem 2rem;
+  background-color: #fff;
+  border-radius: 1rem;
+  display: none;
+}
+
+.howto-container.show,
+.quiz-container.show {
+  display: block;
+}
+
+.howto-container button,
+.quiz-container button {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  border: 1px solid #000;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
 }

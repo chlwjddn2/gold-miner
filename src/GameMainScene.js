@@ -11,14 +11,17 @@ export default class MainScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', './background3.png');
-    this.load.image('rope', './rope.png');
-    this.load.image('saw', './saw.png');
-    this.load.spritesheet('player', './player.png', { frameWidth: 116, frameHeight: 116 });
-    this.load.spritesheet('lever', './lever.png', { frameWidth: 84, frameHeight: 84 });
-    this.load.spritesheet('minerals', './mineral.png', { frameWidth: 374, frameHeight: 355 });
+    this.load.image('background', './images/background3.png');
+    this.load.image('rope', './images/rope.png');
+    this.load.image('saw', './images/saw.png');
+    this.load.spritesheet('player', './images/player.png', { frameWidth: 116, frameHeight: 116 });
+    this.load.spritesheet('lever', './images/lever.png', { frameWidth: 84, frameHeight: 84 });
+    this.load.spritesheet('minerals', './images/mineral.png', { frameWidth: 374, frameHeight: 355 });
 
-    this.load.image('diamond', './diamond.png');
+    this.load.image('bomb', './images/bomb.png');
+    this.load.image('potion', './images/potion.png');
+
+    this.load.image('diamond', './images/diamond.png');
 
     this.scoreText = this.add.text(1000, 36, `score : ${this.score}`, {
       fontSize: '32px',
@@ -49,7 +52,7 @@ export default class MainScene extends Phaser.Scene {
     }).setDepth(100);
 
     this.startTimer(60); 
-    this.load.tilemapTiledJSON("map", `./map${this.level}.json`);
+    this.load.tilemapTiledJSON("map", `./map/map${this.level}.json`);
 
   }
 
@@ -65,16 +68,20 @@ export default class MainScene extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys(); // 키 입력
     this.player = this.add.sprite(width / 2 + 80, 160, 'player').setDepth(10).setFlipX(true).setDepth(5); // 플레이어 이미지 설정
 
+    this.bomb = this.add.image(450, 180, 'bomb').setScale(0.1).setInteractive({ useHandCursor: true });
+    this.potion = this.add.image(510, 180, 'potion').setScale(0.12).setInteractive({ useHandCursor: true });
+
     this.createMap(); // 맵 생성
 
-    this.cursors.down.on('down', () => {
+    this.cursors.down.on('down', (event) => {
       if (this.lineMoving || this.lineShrinking) return;
       this.lineMoving = true;
       this.currentAngle = Math.sin(this.swingTime) * (Math.PI / 2.5); // 현재 스윙 각도 저장
       this.player.setFrame(1);
     });
 
-    this.input.on('pointerdown', () => {
+    this.input.on('pointerdown', (event) => {
+      if (this.ignoreNextPointerDown) return this.ignoreNextPointerDown = false;
       if (this.lineMoving || this.lineShrinking) return;
       this.lineMoving = true;
       this.currentAngle = Math.sin(this.swingTime) * (Math.PI / 2.5); // 현재 스윙 각도 저장
@@ -82,6 +89,18 @@ export default class MainScene extends Phaser.Scene {
     })
     this.matter.world.on('collisionstart', (event) => {
       event.pairs.forEach((pair) => this.handleSawCollision(pair.bodyA, pair.bodyB));
+    });
+
+    this.bomb.on('pointerdown', (event) => {
+      this.ignoreNextPointerDown = true;
+      const quizPopupEvent = new Event('QUIZ_SHOW');
+      document.dispatchEvent(quizPopupEvent);      
+    });
+
+    this.potion.on('pointerdown', (event) => {
+      this.ignoreNextPointerDown = true;
+      const quizPopupEvent = new Event('QUIZ_SHOW');
+      document.dispatchEvent(quizPopupEvent);      
     });
   }
 
@@ -210,7 +229,7 @@ export default class MainScene extends Phaser.Scene {
 
       const sprite = this.matter.add.sprite(x, y, "minerals", gid);
       const objectData = tileSets.tileData[gid]?.objectgroup?.objects[0];
-      const verts = objectData?.polygon?.map(poly => ({ x: poly.x + 100, y: poly.y + 100 }));
+      const verts = objectData?.polygon?.map(poly => ({ x: poly.x , y: poly.y  }));
       
       if (verts) sprite.setBody({ type: 'fromVertices', verts });
       

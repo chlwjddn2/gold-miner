@@ -1,22 +1,22 @@
 import Phaser from 'phaser';
-import './style.css'
-import MainScene from './MainScene';
-import GameOverScene from './GameOverScene';
+import GameMainScene from './GameMainScene';
 import GameStartScene from './GameStartScene';
+import GameOverScene from './GameOverScene';
 import LevelDoneScene from './LevelDoneScene';
+import './style.css'
+import { gsap } from 'gsap/all';
+import SetBgm from './utils/setBgm';
+import loadJson from './utils/loadJson';
 
-const width = window.innerWidth;
-const height = window.innerHeight;
-
-class Game{
-	#config = {
+export default class GoldMinerMain {
+  #config = {
     type: Phaser.CANVAS,
     width: 1280,
     height: 720,
-		backgroundColor: '#88C2F6',
+    backgroundColor: '#88C2F6',
     scene: [
       GameStartScene,
-      MainScene,
+      GameMainScene,
       LevelDoneScene,
       GameOverScene,
     ],
@@ -38,9 +38,61 @@ class Game{
     },
     pixelArt: false,
   }
+
   constructor() {
-		this.game = new Phaser.Game(this.#config);
+    this.howToContainer = document.querySelector(`.howto-container`);
+    this.howToCloseButton = this.howToContainer.querySelector(`.closeButton`);
+
+    this.quizContainer = document.querySelector(`.quiz-container`);
+    this.quizCloseButton = this.quizContainer.querySelector(`.closeButton`);
+    this.init();
 	}
+
+  async init() {
+    this.game = new Phaser.Game(this.#config);
+    this.bgm = new SetBgm('./audio/bgm.mp3');
+    this.quizData = await loadJson('./quizData/data.json');
+    this.event();
+  }
+
+  event() {
+    document.addEventListener('HOWTO_SHOW', (evt) => this.showHowToPopup(true));
+    document.addEventListener('SET_BGM', (evt) => this.bgm.toggle());
+    document.addEventListener('QUIZ_SHOW', (evt) => this.showQuizPopup(true));
+    this.howToCloseButton.addEventListener('click', () => this.showHowToPopup(false));
+    this.quizCloseButton.addEventListener('click', () => this.showQuizPopup(false));
+  }
+  
+  showHowToPopup(bool) {
+    if (bool) {
+      this.howToContainer.classList.add('show');
+      gsap.fromTo(this.howToContainer, {top: '150%'}, {top: '50%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)"});
+    } else {
+      gsap.fromTo(this.howToContainer, {top: '50%'}, {top: '150%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)", onComplete: () => { this.howToContainer.classList.remove('show');}});
+    }
+  }
+
+  showQuizPopup(bool) {
+    if (bool) {
+      this.quizContainer.classList.add('show');
+      gsap.fromTo(this.quizContainer, {top: '150%'}, {top: '50%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)"});
+      this.game.scene.pause('MainScene');
+      this.setQuizItem();
+
+    } else {
+      gsap.fromTo(this.quizContainer, {top: '50%'}, {top: '150%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)", onComplete: () => { 
+        this.quizContainer.classList.remove('show');
+        this.game.scene.resume('MainScene');
+      }});
+    }
+  }
+
+  setQuizItem() {
+    console.log(this.quizData);
+    console.log(this.game);
+    
+    
+  }
 }
 
-const game = new Game();
+const game = new GoldMinerMain();
