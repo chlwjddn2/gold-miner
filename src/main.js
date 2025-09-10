@@ -3,6 +3,7 @@ import GameMainScene from './GameMainScene';
 import GameStartScene from './GameStartScene';
 import GameOverScene from './GameOverScene';
 import LevelDoneScene from './LevelDoneScene';
+import BootScene from './BootScene';
 import './style.css'
 import { gsap } from 'gsap/all';
 import SetBgm from './utils/setBgm';
@@ -15,6 +16,7 @@ export default class GoldMinerMain {
     height: 720,
     backgroundColor: '#88C2F6',
     scene: [
+      BootScene,
       GameStartScene,
       GameMainScene,
       LevelDoneScene,
