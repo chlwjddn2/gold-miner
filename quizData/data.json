@@ -1,21 +1,21 @@
 [
   {
-    "title": "잘 듣고, 알맞은 그림을 고르세요.",
-    "images": [
-        { "img": "data/images/quiz_01.png" },
-        { "img": "data/images/quiz_05.png" },
-        { "img": "data/images/quiz_06.png" }
+    "title": "다음 중 사막에 사는 동물을 골라 보세요.",
+    "list": [
+        "낙타",
+        "붕어",
+        "감자"
     ],
-    "correct": 1
+    "answer": 1
   },
   {
     "title": "잘 듣고, 알맞은 그림을 고르세요.",
-    "images": [
-        { "img": "data/images/quiz_01.png" },
-        { "img": "data/images/quiz_05.png" },
-        { "img": "data/images/quiz_06.png" }
+    "list": [
+        "낙타",
+        "붕어",
+        "감자"
     ],
-    "correct": 1
+    "answer": 1
   }
   
 ]
