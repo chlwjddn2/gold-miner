@@ -10,26 +10,26 @@ export default class GameOverScene extends Phaser.Scene {
     this.add.rectangle(width / 2, height / 2, 800, 600, 0x000000, 0.6);
 
     // "Game Over" 텍스트 - 중앙 상단
-    this.add.text(width / 2, height / 2 - 100, '💀 GAME OVER 💀', {
+    this.add.text(width / 2, height / 2 - 100, '💀 게임 종료 💀', {
       fontSize: '48px',
       fill: '#ffffff',
-      fontFamily: 'Daeojamjil',
+      fontFamily: 'SchoolSafetyRoundedSmile',
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
     // [R] Restart Game - 중앙
-    this.reStartButton = this.add.text(width / 2, height / 2, '[ R ] Restart Game', {
+    this.reStartButton = this.add.text(width / 2, height / 2, '[ R ] 재시작', {
       fontSize: '24px',
       fill: '#ffff00',
-      fontFamily: 'Daeojamjil',
+      fontFamily: 'SchoolSafetyRoundedSmile',
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
     // [M] Main Menu - 중앙 하단
-    this.mainMenuButton = this.add.text(width / 2, height / 2 + 50, '[ M ] Main Menu', {
+    this.mainMenuButton = this.add.text(width / 2, height / 2 + 50, '[ M ] 메인메뉴', {
       fontSize: '24px',
       fill: '#ffff00',
-      fontFamily: 'Daeojamjil',
+      fontFamily: 'SchoolSafetyRoundedSmile',
       fontStyle: 'bold'
     }).setOrigin(0.5);
 

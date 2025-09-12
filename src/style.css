@@ -32,6 +32,11 @@ body {
 	line-height: 1;
   overflow: hidden;
 }
+html, 
+body {
+  width: 100%;
+  height: 100%;
+}
 ol, ul {
 	list-style: none;
 }
@@ -46,6 +51,16 @@ q:before, q:after {
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 @font-face {
@@ -69,31 +84,87 @@ table {
   font-display: swap;
 }
 
-.howto-container,
-.quiz-container {
-	position: absolute; 
-  top: 50%; 
-  left: 50%; 
-  transform: translate(-50%, -50%); 
+#wrap {
+  width: 1280px;
+  height: 720px;
+  position: relative;
+  overflow: hidden;
+  transform-origin: 0% 0%;
+}
+
+
+.popup-container {
+  transform-origin: top left;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+[class*="container"] {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
   display: flex; 
-  padding: 10rem 2rem;
-  background-color: #fff;
-  border-radius: 1rem;
+  width: 100%; 
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: none;
 }
 
-.howto-container.show,
-.quiz-container.show {
+.howto-container,
+.quiz-container {
+  transform: translateY(-50%);
+}
+
+[class*="container"].show {
   display: block;
 }
 
-.howto-container button,
-.quiz-container button {
+[class*="inner"] {
   position: absolute;
-  right: 1rem;
-  top: 1rem;
-  border: 1px solid #000;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.quiz-question{
+  display: flex;
+  gap: 1rem;
+}
+
+.quiz-question > .quiz-image {
+  flex: 1;
+  padding: 1rem;
+}
+
+.quiz-question > .quiz-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 3;
+  font-size: 1.5rem;
+}
+
+.quiz-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.quiz-list > li {
+  flex: 1;
+  text-align: center;
+  padding: 1rem;
+  background-color: #33CCCC;
+  border-radius: 1rem;
+  color: #fff;
+  cursor: pointer;
 }

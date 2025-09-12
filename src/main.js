@@ -6,8 +6,8 @@ import LevelDoneScene from './LevelDoneScene';
 import BootScene from './BootScene';
 import './style.css'
 import { gsap } from 'gsap/all';
-import SetBgm from './utils/setBgm';
 import loadJson from './utils/loadJson';
+import Quiz from './Quiz';
 
 export default class GoldMinerMain {
   #config = {
@@ -22,7 +22,7 @@ export default class GoldMinerMain {
       LevelDoneScene,
       GameOverScene,
     ],
-    parent: 'container',
+    parent: 'game-container',
     physics: {
       default: 'matter',
       matter: {
@@ -34,35 +34,35 @@ export default class GoldMinerMain {
         constraintIterations: 2,
       }
     },
-    scale: {
-      mode:Phaser.Scale.FIT,//자동맞춤
-      autoCenter:Phaser.Scale.CENTER_BOTH,//가로세로 모두맞춤
-    },
     pixelArt: false,
   }
 
   constructor() {
     this.howToContainer = document.querySelector(`.howto-container`);
     this.howToCloseButton = this.howToContainer.querySelector(`.closeButton`);
-
     this.quizContainer = document.querySelector(`.quiz-container`);
-    this.quizCloseButton = this.quizContainer.querySelector(`.closeButton`);
+    this.wrap = document.querySelector('#wrap');
+    
     this.init();
 	}
 
   async init() {
     this.game = new Phaser.Game(this.#config);
-    this.bgm = new SetBgm('./audio/bgm.mp3');
     this.quizData = await loadJson('./quizData/data.json');
+    this.availableQuizData = [...this.quizData]; 
     this.event();
+    this.resizeContent();
+    window.addEventListener('resize', () => this.resizeContent())
   }
 
   event() {
-    document.addEventListener('HOWTO_SHOW', (evt) => this.showHowToPopup(true));
-    document.addEventListener('SET_BGM', (evt) => this.bgm.toggle());
-    document.addEventListener('QUIZ_SHOW', (evt) => this.showQuizPopup(true));
+    document.addEventListener('HOWTO_SHOW', () => this.showHowToPopup(true));
+    document.addEventListener('SET_BGM', () => this.bgm.toggle());
+    document.addEventListener('QUIZ_SHOW', (event) => {
+      this.showQuizPopup(true);
+      this.setQuizItem(event.key)
+    });
     this.howToCloseButton.addEventListener('click', () => this.showHowToPopup(false));
-    this.quizCloseButton.addEventListener('click', () => this.showQuizPopup(false));
   }
   
   showHowToPopup(bool) {
@@ -89,11 +89,18 @@ export default class GoldMinerMain {
     }
   }
 
-  setQuizItem() {
-    console.log(this.quizData);
-    console.log(this.game);
+  setQuizItem(key) {
+    const randomIndex = Math.floor(Math.random() * this.availableQuizData.length);
+    const selectedQuiz = this.availableQuizData.splice(randomIndex, 1)[0]; // 꺼내면서 배열에서 제거
+    this.quiz = new Quiz(this.quizContainer, selectedQuiz, key);
+  }
+
     
-    
+  resizeContent() {
+    const ratio = document.body.clientWidth / 1280;
+    this.wrap.style.top = `${(document.body.clientHeight - 720 * ratio) / 2}px`
+    this.wrap.style.left = '0px'
+    this.wrap.style.scale = `${ratio}`
   }
 }
 

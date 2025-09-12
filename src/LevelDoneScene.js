@@ -12,25 +12,25 @@ export default class LevelDoneScene extends Phaser.Scene {
   create() {
     const { width, height } = this.scale;
     this.add.rectangle(width / 2, height / 2, 800, 600, 0x000000, 0.6);
-    this.add.text(width / 2, height / 2 - 100, '🎇 Level Done! 🎇', {
+    this.add.text(width / 2, height / 2 - 100, `${this.level}단계 성공`, {
       fontSize: '48px',
       fill: '#ffffff',
-      fontFamily: 'Daeojamjil',
+      fontFamily: 'SchoolSafetyRoundedSmile',
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    this.add.text(width / 2, height / 2 + 50, `Score: ${this.score}`, {
+    this.add.text(width / 2, height / 2 + 50, `점수: ${this.score}`, {
       fontSize: '48px',
       fill: '#ffffff',
-      fontFamily: 'Daeojamjil',
+      fontFamily: 'SchoolSafetyRoundedSmile',
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
     // [R] Restart Game - 중앙
-    this.nexLevelButton = this.add.text(width / 2, height / 2 + 100, 'Next Level', {
+    this.nexLevelButton = this.add.text(width / 2, height / 2 + 100, '다음 단계', {
       fontSize: '24px',
       fill: '#ffff00',
-      fontFamily: 'Daeojamjil',
+      fontFamily: 'SchoolSafetyRoundedSmile',
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
