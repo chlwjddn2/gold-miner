@@ -1,29 +1,24 @@
+import { gameEvents } from './Event.js';
+import loadJson from './utils/loadJson';
+import findRandomArray from './utils/findRandomArray';
+
 export default class Quiz{
-  constructor(container, data, key) {
-    this.container = container;
-    this.list = data.list
-    this.answer = data.correct;
-    this.title = data.title;
-    this.key = key;
-
+  constructor(container) {
+    this.container = container
     this.quizItems = [];
-
     this.init();
   }
 
-  init() {
-    this.container.append(this.setQuizHtml())
-
-    Array.from(this.quizItems).forEach((item, index) => {
-      item.addEventListener('click', () => {
-        console.log('click');
-        
-        
-      })
-    })
+  async init() {
+    this.quizData = await loadJson('./quizData/data.json');
   }
 
-  setQuizHtml() {
+  renderQuestion(key) {
+     this.setQuizHtml(findRandomArray(this.quizData), key);
+     this.bindEvents();
+  }
+
+  setQuizHtml(data = {}, key = 'bomb') {
     const quizInner = document.createElement('div');
     quizInner.className = 'quiz-inner';
 
@@ -37,24 +32,23 @@ export default class Quiz{
     quizText.className = 'quiz-text';
 
     const img = document.createElement('img');
-    img.src =  `./images/${this.key}.png`; // 기본 이미지
+    img.src =  `./images/${key}.png`; // 기본 이미지
     img.alt = '';
     quizImage.appendChild(img);
 
     const p = document.createElement('p');
-    p.textContent = this.title;
+    p.textContent = data.title;
 
     const quizList = document.createElement('ul');
     quizList.className = 'quiz-list';
 
-    this.list.forEach(text => {
+    data.list.forEach(text => {
       const li = document.createElement('li');
       li.className = 'quiz-item';
       li.textContent = text;
       quizList.appendChild(li);
       this.quizItems.push(li);
     });
-
 
     quizText.appendChild(p);
 
@@ -64,10 +58,23 @@ export default class Quiz{
     quizQuestion.appendChild(quizImage);
     quizQuestion.appendChild(quizText);
 
-    return quizInner;
+    this.container.appendChild(quizInner);
   }
 
+   bindEvents() {
+    this.quizItems.forEach(item => {
+      item.addEventListener('click', () => {
+        gameEvents.emit('correct');
+      });
+    });
+  }
+
+
   correct() {
-    
+    gameEvents.emit('correct');
+  }
+
+  incorrect() {
+    gameEvents.emit('incorrect');
   }
 }

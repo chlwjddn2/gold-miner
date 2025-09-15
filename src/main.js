@@ -1,13 +1,17 @@
-import Phaser from 'phaser';
-import GameMainScene from './GameMainScene';
-import GameStartScene from './GameStartScene';
-import GameOverScene from './GameOverScene';
-import LevelDoneScene from './LevelDoneScene';
-import BootScene from './BootScene';
 import './style.css'
+import Phaser from 'phaser';
+
 import { gsap } from 'gsap/all';
-import loadJson from './utils/loadJson';
+import { gameEvents } from './Event.js';
+
+import BootScene from './BootScene';
+import GameStartScene from './GameStartScene';
+import GameMainScene from './GameMainScene';
+import LevelDoneScene from './LevelDoneScene';
+import GameOverScene from './GameOverScene';
+
 import Quiz from './Quiz';
+
 
 export default class GoldMinerMain {
   #config = {
@@ -42,59 +46,58 @@ export default class GoldMinerMain {
     this.howToCloseButton = this.howToContainer.querySelector(`.closeButton`);
     this.quizContainer = document.querySelector(`.quiz-container`);
     this.wrap = document.querySelector('#wrap');
-    
+    this.game = new Phaser.Game(this.#config);
+    this.quiz = new Quiz(this.quizContainer);
+
     this.init();
 	}
 
   async init() {
-    this.game = new Phaser.Game(this.#config);
-    this.quizData = await loadJson('./quizData/data.json');
-    this.availableQuizData = [...this.quizData]; 
     this.event();
     this.resizeContent();
-    window.addEventListener('resize', () => this.resizeContent())
   }
 
   event() {
+    window.addEventListener('resize', () => this.resizeContent())
     document.addEventListener('HOWTO_SHOW', () => this.showHowToPopup(true));
     document.addEventListener('SET_BGM', () => this.bgm.toggle());
-    document.addEventListener('QUIZ_SHOW', (event) => {
-      this.showQuizPopup(true);
-      this.setQuizItem(event.key)
-    });
     this.howToCloseButton.addEventListener('click', () => this.showHowToPopup(false));
+    
+    gameEvents.on('bomb', (event) => {
+      this.quiz.renderQuestion(event.key);
+      this.showQuizPopup(true);
+    });
+
+    gameEvents.on('correct', (event) => {
+      this.showQuizPopup(false);
+    });
   }
   
   showHowToPopup(bool) {
     if (bool) {
       this.howToContainer.classList.add('show');
-      gsap.fromTo(this.howToContainer, {top: '150%'}, {top: '50%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)"});
-    } else {
-      gsap.fromTo(this.howToContainer, {top: '50%'}, {top: '150%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)", onComplete: () => { this.howToContainer.classList.remove('show');}});
+      gsap.fromTo(this.howToContainer.querySelector('.howto-inner'), {top: '150%'}, {top: '50%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)"});
+    } 
+    else {
+      gsap.fromTo(this.howToContainer.querySelector('.howto-inner'), {top: '50%'}, {top: '150%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)", onComplete: () => { 
+        this.howToContainer.classList.remove('show');
+      }});
     }
   }
 
   showQuizPopup(bool) {
     if (bool) {
       this.quizContainer.classList.add('show');
-      gsap.fromTo(this.quizContainer, {top: '150%'}, {top: '50%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)"});
+      gsap.fromTo(this.quizContainer.querySelector('.quiz-inner'), {top: '150%'}, {top: '50%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)"});
       this.game.scene.pause('MainScene');
-      this.setQuizItem();
-
-    } else {
-      gsap.fromTo(this.quizContainer, {top: '50%'}, {top: '150%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)", onComplete: () => { 
+    } 
+    else {
+      gsap.fromTo(this.quizContainer.querySelector('.quiz-inner'), {top: '50%'}, {top: '150%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)", onComplete: () => { 
         this.quizContainer.classList.remove('show');
         this.game.scene.resume('MainScene');
       }});
     }
   }
-
-  setQuizItem(key) {
-    const randomIndex = Math.floor(Math.random() * this.availableQuizData.length);
-    const selectedQuiz = this.availableQuizData.splice(randomIndex, 1)[0]; // 꺼내면서 배열에서 제거
-    this.quiz = new Quiz(this.quizContainer, selectedQuiz, key);
-  }
-
     
   resizeContent() {
     const ratio = document.body.clientWidth / 1280;

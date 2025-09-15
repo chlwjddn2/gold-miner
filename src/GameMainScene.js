@@ -1,3 +1,5 @@
+import { gameEvents } from './Event.js';
+
 export default class MainScene extends Phaser.Scene {
   constructor() {
     super('MainScene');
@@ -21,7 +23,7 @@ export default class MainScene extends Phaser.Scene {
     this.load.spritesheet('minerals', './images/mineral.png', { frameWidth: 532, frameHeight: 532 });
     this.load.spritesheet('explosion', './images/explosion.png', { frameWidth: 96, frameHeight: 96 });
     
-    this.load.tilemapTiledJSON(`map${this.level}`, `./map/map${this.level}.json`);
+    this.load.tilemapTiledJSON(`map`, `./map/map.json`);
 
     this.load.audio('ropeSound', './audio/rope.mp3');
     this.load.audio('wrongSound', './audio/wrong.mp3');
@@ -42,7 +44,7 @@ export default class MainScene extends Phaser.Scene {
     this.attachedObject = null;
     this.timeLeft = 60;
 
-    this.background = this.add.tileSprite(0, 0, this.width, this.height, 'background').setOrigin(0, 0); // 배경
+    this.background = this.add.tileSprite(0, 0, this.width, this.height, 'background').setOrigin(0, 0).setInteractive(); // 배경
     this.rope = this.add.image(this.width / 2, 116, 'rope').setOrigin(0.5, 0).setScale(0.5, this.lineLength / 100).setDepth(10); // rope 이미지 설정
     this.clamp = this.matter.add.image(this.width / 2, 170, 'clamp').setOrigin(0.5, 0).setScale(0.1).setDepth(20).setBody({ type: 'circle', radius: 10 }); // clamp 이미지 설정
 
@@ -157,26 +159,17 @@ export default class MainScene extends Phaser.Scene {
       this.mineralExplosion();
     });
 
-    this.input.on('pointerdown', (event) => {
-      if (this.ignoreNextPointerDown) return this.ignoreNextPointerDown = false;
+    this.background.on('pointerdown', () => {
       if (this.lineMoving || this.lineShrinking) return;
       this.lineMoving = true;
       this.ropeSound.play();
       this.player.setFrame(1);
     })
 
-    
 
-    this.bomb.on('pointerdown', (event) => this.addItemCustomEvent(this.bomb));
-    this.potion.on('pointerdown', (event) => this.addItemCustomEvent(this.potion));
-
-    this.bgmButton.on('pointerdown', () => {
-      this.ignoreNextPointerDown = true;
-      this.setBgm(this.bgm.isPlaying);
-    })
-
-    
-
+    this.bomb.on('pointerdown', () => gameEvents.emit('bomb',{ key: 'bomb' }));
+    this.potion.on('pointerdown', (event) => gameEvents.emit('bomb',{ key: 'potion' }));
+    this.bgmButton.on('pointerdown', () => this.setBgm(this.bgm.isPlaying))
     this.matter.world.on('collisionstart', (event) => {
       event.pairs.forEach((pair) => this.handleclampCollision(pair.bodyA, pair.bodyB));
     });
@@ -197,6 +190,7 @@ export default class MainScene extends Phaser.Scene {
     this.attachedObject.price < 50 ? this.wrongSound.play() : this.correctSound.play();
     this.lineMoving = false;
     this.lineShrinking = true;
+    this.priceText = this.createText(570, 30,  `${this.attachedObject.price}`);
   }
 
   startTimer(duration = 60) {
@@ -219,17 +213,21 @@ export default class MainScene extends Phaser.Scene {
     this.scene.pause();        
     this.bgm.stop();
     this.ropeSound.stop();
+    this.ropeShrinkingSound.stop();
   }
 
   updateScore(amount) {
     this.score += amount;
     this.scoreText.setText(`점수 : ${this.score}`);
+    this.priceText?.destroy();
   }
 
   createMap() {
     const randomNunber = Phaser.Math.Between(1, 2);
-    const map = this.make.tilemap({ key: `map${this.level}` });
-    const objectLayer = map.getObjectLayer(`Map Layer${randomNunber}`);
+    const map = this.make.tilemap({ key: `map` });
+    console.log(`Map Layer${this.level}`);
+    
+    const objectLayer = map.getObjectLayer(`Map Layer${this.level}`);
     const tileSets = map.getTileset("mineral");
     
     objectLayer.objects.forEach((obj) => {
@@ -260,14 +258,6 @@ export default class MainScene extends Phaser.Scene {
       fontStyle: 'bold'
     }).setDepth(100);
   }
-
-  addItemCustomEvent(target) {
-    this.ignoreNextPointerDown = true;
-    const quizEvent = new Event('QUIZ_SHOW');
-    quizEvent.key = target.texture.key;
-    document.dispatchEvent(quizEvent);     
-    this.bgm.stop(); 
-  }
  
   mineralExplosion() {
     const explosion = this.add.sprite(this.attachedObject.x, this.attachedObject.y, 'explosion').setScale(1);
@@ -276,6 +266,7 @@ export default class MainScene extends Phaser.Scene {
     this.attachedObject.destroy(); // 혹은 점수 추가 등 원하는 처리
     this.attachedObject = null;
     this.baseSpeed = 10;
+    this.priceText?.destroy();
   }
 
   setBgm(bool) {

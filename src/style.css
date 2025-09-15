@@ -92,14 +92,6 @@ img {
   transform-origin: 0% 0%;
 }
 
-
-.popup-container {
-  transform-origin: top left;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
 [class*="container"] {
   position: absolute; 
   top: 0; 
@@ -107,16 +99,16 @@ img {
   display: flex; 
   width: 100%; 
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: none;
 }
 
 .howto-container,
 .quiz-container {
-  transform: translateY(-50%);
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-[class*="container"].show {
+.howto-container.show,
+.quiz-container.show {
   display: block;
 }
 
