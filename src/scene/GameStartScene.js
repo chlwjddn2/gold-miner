@@ -1,17 +1,15 @@
+import BgmToggleButton from '../components/BgmToggleButton.js'
+import { gameEvents } from '../Event.js';
+
 export default class GameStartScene extends Phaser.Scene {
   constructor() {
     super('GameStartScene');
   }
 
-  preload() {
-    this.load.spritesheet('bgmButton', './images/soundButton.png', {
-      frameWidth: 532,
-      frameHeight: 532
-    })
-  }
-
   create() {
     const { width, height } = this.scale;
+    this.bgmButton = new BgmToggleButton(this, width - 100, height - 100);
+    this.bgmButton.init();
 
     this.title = this.add.text(width / 2, height / 2 - 100, ' 황금 캐기 ', {
       fontSize: '48px',
@@ -31,11 +29,12 @@ export default class GameStartScene extends Phaser.Scene {
       fontStyle: 'bold'
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
-    this.howToGameButton.on('pointerdown', () => {
-      const howToPopEvent = new Event('HOWTO_SHOW');
-      document.dispatchEvent(howToPopEvent);      
-    });
+    this.howToGameButton.on('pointerdown', () => gameEvents.emit('howto'));
 
-    this.startButton.on('pointerdown', () => this.scene.start('MainScene'));
+    this.startButton.on('pointerdown', async () => {
+      this.sound.get('click').play();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      this.scene.start('MainScene')
+    });
   }
 }

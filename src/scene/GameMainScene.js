@@ -1,4 +1,5 @@
-import { gameEvents } from './Event.js';
+import { gameEvents } from '../Event.js';
+import BgmToggleButton from '../components/BgmToggleButton.js';
 
 export default class MainScene extends Phaser.Scene {
   constructor() {
@@ -12,7 +13,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', './images/background.png');
+    this.load.image('background', './images/background.png'); 
     this.load.image('rope', './images/rope.png');
     this.load.image('clamp', './images/clamp.png');
     this.load.image('bomb', './images/bomb.png');
@@ -25,6 +26,7 @@ export default class MainScene extends Phaser.Scene {
     
     this.load.tilemapTiledJSON(`map`, `./map/map.json`);
 
+    // 음원 로드
     this.load.audio('ropeSound', './audio/rope.mp3');
     this.load.audio('wrongSound', './audio/wrong.mp3');
     this.load.audio('correctSound', './audio/correct.mp3');
@@ -33,54 +35,35 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    this.width = this.cameras.main.width;
-    this.height = this.cameras.main.height;
+    this.angle = 0;
+    this.swingTime = 0;           // 스윙 계산용 시간
+    this.baseSpeed = 10;          // 선 늘어나고 줄어드는 기본 속도
+    this.lineLength = 100;        // 현재 선 길이
     this.lineMoving = false;      // 선 늘어나는 상태
     this.lineShrinking = false;   // 선 줄어드는 상태
-    this.swingTime = 0;           // 스윙 계산용 시간
-    this.lineLength = 100;        // 현재 선 길이
-    this.baseSpeed = 10;          // 선 늘어나고 줄어드는 기본 속도
-    this.angle = 0;
     this.attachedObject = null;
-    this.timeLeft = 60;
+    this.width = this.cameras.main.width;
+    this.height = this.cameras.main.height;
 
-    this.background = this.add.tileSprite(0, 0, this.width, this.height, 'background').setOrigin(0, 0).setInteractive(); // 배경
+    this.background = this.add.image(0, 0, 'background').setOrigin(0, 0).setInteractive(); // 배경
     this.rope = this.add.image(this.width / 2, 116, 'rope').setOrigin(0.5, 0).setScale(0.5, this.lineLength / 100).setDepth(10); // rope 이미지 설정
     this.clamp = this.matter.add.image(this.width / 2, 170, 'clamp').setOrigin(0.5, 0).setScale(0.1).setDepth(20).setBody({ type: 'circle', radius: 10 }); // clamp 이미지 설정
-
     this.cable = this.add.sprite(this.width / 2, 116, 'cable').setDepth(5).setScale(0.15);
     this.player = this.add.sprite(this.width / 2 + 80, 106, 'player').setDepth(10).setFlipX(true).setDepth(5); // 플레이어 이미지 설정
-
-    this.cursors = this.input.keyboard.createCursorKeys(); // 키 입력
-    
     this.bomb = this.add.image(450, 125, 'bomb').setScale(0.1).setInteractive({ useHandCursor: true });
-    console.log(this.bomb);
-    
     this.potion = this.add.image(510, 125, 'potion').setScale(0.12).setInteractive({ useHandCursor: true });
-    this.bgmButton = this.add.sprite(80, 65, 'bgmButton').setOrigin(0.5).setScale(0.1).setInteractive({ useHandCursor: true }).setFrame(1);
-
-    this.scoreText = this.createText( this.width - 250, 46,  `점수 : ${this.score}`)
-    this.targetScoreText = this.createText(this.width - 250, 110,  `${this.level}단계 목표 : ${this.targetScore}`);
-    this.timerText = this.createText(50, 110,  `시간 : ${this.timeLeft}`);
     
+    this.cursors = this.input.keyboard.createCursorKeys(); // 키 입력
 
-    this.ropeSound = this.sound.add('ropeSound', { volume: 0.5 });
-    this.wrongSound = this.sound.add('wrongSound', { volume: 0.5 });
-    this.correctSound = this.sound.add('correctSound');
-    this.moneySound = this.sound.add('moneySound');
-    this.ropeShrinkingSound = this.sound.add('ropeShrinkingSound', { loop: true });
-    this.bgm = this.sound.add('bgm', { loop: true, volume: 0.3 });
+    this.initMap();
+    this.initSound();
+    this.initTimer();
+    this.initScore();
+    this.initAnimation();
+    this.addEvent();
 
-    this.anims.create({
-      key: 'explosion',
-      frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 11 }),
-      frameRate: 10,
-    });
-    
-    this.bgm.play();
-    this.createMap(); // 맵 생성
-    this.startTimer(); 
-    this.event();
+    this.bgmButton = new BgmToggleButton(this, 80, 65);
+    this.bgmButton.init();
   }
 
   update(time, delta) {
@@ -88,6 +71,69 @@ export default class MainScene extends Phaser.Scene {
     if (this.lineMoving) this.expansionRope();
     if (this.lineShrinking) this.shrinkingRope();
     this.updateClamp();
+  }
+
+  initTimer(time = 60) {
+    this.timerEvent = this.time.addEvent({
+      delay: 1000,
+      callback: () => {
+        time--;
+        this.timerText?.setText(`시간 : ${time}`);
+        if (time <= 0) this.onTimerEnd();
+      },
+      callbackScope: this,
+    });
+
+    this.targetScoreText = this.createText(50, 100,  `시간 : ${time}`);
+  }
+
+  initScore() {
+    this.scoreText = this.createText(this.width - 250, 46,  `점수 : ${this.score}`);
+    this.targetScoreText = this.createText(this.width - 250, 110,  `${this.level}단계 목표 : ${this.targetScore}`);
+  }
+
+  initMap() {
+    const map = this.make.tilemap({  key: 'map' });
+    const tileSet = map.getTileset('mineral');
+    const objectLayer = map.getObjectLayer(`Map Layer${this.level}`);
+
+    objectLayer.objects.forEach((obj) => {
+      const x = Math.floor(obj.x);
+      const y = Math.floor(obj.y) - 80;
+      const gid = obj.gid - 2;
+
+      const sprite = this.matter.add.sprite(x, y, "minerals", gid);
+      const objectData = tileSet.tileData[gid]?.objectgroup?.objects[0];
+      const verts = objectData?.polygon?.map(poly => ({ x: poly.x, y: poly.y }));
+      if (verts) sprite.setBody({ type: 'fromVertices', verts });
+      
+      sprite.setDisplaySize(obj.width, obj.height);
+
+      // object properties에서 price, weight 가져오기
+      const price = Number(obj.properties?.find(p => p.name === 'price')?.value) || Phaser.Math.Between(10, 500);
+      const weight = Number(obj.properties?.find(p => p.name === 'weight')?.value) || Phaser.Math.Between(10, 90);
+
+      sprite.price = price;
+      sprite.weight = weight;
+    });
+  }
+
+  initSound() {
+    this.ropeSound = this.sound.add('ropeSound', { volume: 0.5 });
+    this.wrongSound = this.sound.add('wrongSound', { volume: 0.5 });
+    this.correctSound = this.sound.add('correctSound');
+    this.moneySound = this.sound.add('moneySound');
+    this.ropeShrinkingSound = this.sound.add('ropeShrinkingSound', { loop: true });
+
+    !this.sound.get('bgm').isPlaying && this.sound.get('bgm').play();
+  }
+
+  initAnimation() {
+    this.anims.create({
+      key: 'explosion',
+      frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 11 }),
+      frameRate: 10,
+    });
   }
 
   updateClamp() {
@@ -146,7 +192,7 @@ export default class MainScene extends Phaser.Scene {
     }
   }
 
-  event() {
+  addEvent() {
     this.cursors.down.on('down', (event) => {
       if (this.lineMoving || this.lineShrinking) return;
       this.lineMoving = true;
@@ -166,21 +212,11 @@ export default class MainScene extends Phaser.Scene {
       this.player.setFrame(1);
     })
 
-
     this.bomb.on('pointerdown', () => gameEvents.emit('bomb',{ key: 'bomb' }));
     this.potion.on('pointerdown', (event) => gameEvents.emit('bomb',{ key: 'potion' }));
-    this.bgmButton.on('pointerdown', () => this.setBgm(this.bgm.isPlaying))
     this.matter.world.on('collisionstart', (event) => {
       event.pairs.forEach((pair) => this.handleclampCollision(pair.bodyA, pair.bodyB));
     });
-  }
-
-  setattachedObjectPosition() {
-    this.attachedObject.setPosition(this.clamp.x, this.clamp.y);
-    this.attachedObject.setRotation(this.angle);
-    this.attachedObject.setDepth(10);
-    this.lineMoving = false;
-    this.lineShrinking = true;
   }
 
   handleclampCollision(clamp, object) {
@@ -190,21 +226,6 @@ export default class MainScene extends Phaser.Scene {
     this.attachedObject.price < 50 ? this.wrongSound.play() : this.correctSound.play();
     this.lineMoving = false;
     this.lineShrinking = true;
-    this.priceText = this.createText(570, 30,  `${this.attachedObject.price}`);
-  }
-
-  startTimer(duration = 60) {
-    // 1초마다 timeLeft 감소 
-    this.timerEvent = this.time.addEvent({
-      delay: 1000, // 1초
-      callback: () => {
-        this.timeLeft--;
-        this.timerText.setText(`시간 : ${this.timeLeft}`);
-        if (this.timeLeft <= 0) this.onTimerEnd();
-      },
-      callbackScope: this,
-      loop: true,
-    });
   }
 
   onTimerEnd() {
@@ -214,40 +235,6 @@ export default class MainScene extends Phaser.Scene {
     this.bgm.stop();
     this.ropeSound.stop();
     this.ropeShrinkingSound.stop();
-  }
-
-  updateScore(amount) {
-    this.score += amount;
-    this.scoreText.setText(`점수 : ${this.score}`);
-    this.priceText?.destroy();
-  }
-
-  createMap() {
-    const randomNunber = Phaser.Math.Between(1, 2);
-    const map = this.make.tilemap({ key: `map` });
-    console.log(`Map Layer${this.level}`);
-    
-    const objectLayer = map.getObjectLayer(`Map Layer${this.level}`);
-    const tileSets = map.getTileset("mineral");
-    
-    objectLayer.objects.forEach((obj) => {
-      const x = Math.floor(obj.x);
-      const y = Math.floor(obj.y) - 80;
-      const gid = obj.gid - 2;
-      
-      const sprite = this.matter.add.sprite(x, y, "minerals", gid);
-      const objectData = tileSets.tileData[gid]?.objectgroup?.objects[0];
-      const verts = objectData?.polygon?.map(poly => ({ x: poly.x , y: poly.y  }));
-
-      const price = Number(obj.properties?.find((property) => property.name === 'price').value);
-      const weight = Number(obj.properties?.find((property) => property.name === 'weight').value);
-      
-      if (verts) sprite.setBody({ type: 'fromVertices', verts });
-      
-      sprite.setDisplaySize(obj.width, obj.height);
-      sprite.price = price || Phaser.Math.Between(10, 500);
-      sprite.weight = weight || Phaser.Math.Between(10, 90);
-    });
   }
 
   createText(x, y, text) {
@@ -269,19 +256,8 @@ export default class MainScene extends Phaser.Scene {
     this.priceText?.destroy();
   }
 
-  setBgm(bool) {
-    if (bool) {
-      this.bgm.stop();
-      this.bgmButton.setFrame(0);
-    } else {
-      this.bgm.play();
-      this.bgmButton.setFrame(1);
-    }          
-  }
-
   createScoreText() {
     this.hideText = this.createText(770, 110,  `+${this.attachedObject.price}`);
-
     this.tweens.add({
       targets: this.hideText,         
       y: this.hideText.y - 70,       
@@ -292,5 +268,10 @@ export default class MainScene extends Phaser.Scene {
         this.hideText.destroy();
       }
     });
+  }
+
+  updateScore(amount) {
+    this.score += amount;
+    this.scoreText.setText(`점수 : ${this.score}`);
   }
 }

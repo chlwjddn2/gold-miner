@@ -4,11 +4,11 @@ import Phaser from 'phaser';
 import { gsap } from 'gsap/all';
 import { gameEvents } from './Event.js';
 
-import BootScene from './BootScene';
-import GameStartScene from './GameStartScene';
-import GameMainScene from './GameMainScene';
-import LevelDoneScene from './LevelDoneScene';
-import GameOverScene from './GameOverScene';
+import BootScene from './scene/BootScene.js';
+import GameStartScene from './scene/GameStartScene.js';
+import GameMainScene from './scene/GameMainScene.js';
+import LevelDoneScene from './scene/LevelDoneScene.js';
+import GameOverScene from './scene/GameOverScene.js';
 
 import Quiz from './Quiz';
 
@@ -21,8 +21,8 @@ export default class GoldMinerMain {
     backgroundColor: '#88C2F6',
     scene: [
       BootScene,
-      GameStartScene,
       GameMainScene,
+      GameStartScene,
       LevelDoneScene,
       GameOverScene,
     ],
@@ -59,18 +59,15 @@ export default class GoldMinerMain {
 
   event() {
     window.addEventListener('resize', () => this.resizeContent())
-    document.addEventListener('HOWTO_SHOW', () => this.showHowToPopup(true));
-    document.addEventListener('SET_BGM', () => this.bgm.toggle());
     this.howToCloseButton.addEventListener('click', () => this.showHowToPopup(false));
     
     gameEvents.on('bomb', (event) => {
       this.quiz.renderQuestion(event.key);
       this.showQuizPopup(true);
     });
-
-    gameEvents.on('correct', (event) => {
-      this.showQuizPopup(false);
-    });
+    
+    gameEvents.on('correct', () => this.showQuizPopup(false));
+    gameEvents.on('howto', () => this.showHowToPopup(true))
   }
   
   showHowToPopup(bool) {
