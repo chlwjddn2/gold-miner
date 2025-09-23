@@ -1,11 +1,11 @@
-import { gameEvents } from './Event.js';
+import { gameEvents } from './manager/EventManager.js';
 import loadJson from './utils/loadJson';
 import findRandomArray from './utils/findRandomArray';
+import playSoundEffect from './utils/playSoundEffect';
 
 export default class Quiz{
-  constructor(container) {
-    this.container = container
-    this.quizItems = [];
+  constructor() {
+    this.container = document.querySelector(`.quiz-container`);
     this.init();
   }
 
@@ -14,11 +14,16 @@ export default class Quiz{
   }
 
   renderQuestion(key) {
-     this.setQuizHtml(findRandomArray(this.quizData), key);
-     this.bindEvents();
+    this.randomData = findRandomArray(this.quizData);
+    this.key = key;
+    this.setQuizHtml(this.randomData, key);
+    this.bindEvents();
   }
 
   setQuizHtml(data = {}, key = 'bomb') {
+    this.container.innerHTML = '';
+    this.quizItems = [];
+
     const quizInner = document.createElement('div');
     quizInner.className = 'quiz-inner';
 
@@ -51,30 +56,29 @@ export default class Quiz{
     });
 
     quizText.appendChild(p);
-
     quizInner.appendChild(quizQuestion);
     quizInner.appendChild(quizList);
-    
     quizQuestion.appendChild(quizImage);
     quizQuestion.appendChild(quizText);
 
     this.container.appendChild(quizInner);
   }
 
-   bindEvents() {
-    this.quizItems.forEach(item => {
+  bindEvents() {
+    this.quizItems.forEach((item, index) => {
       item.addEventListener('click', () => {
-        gameEvents.emit('correct');
+        index === this.randomData.answer ? this.correct() : this.incorrect();
       });
     });
   }
 
-
   correct() {
-    gameEvents.emit('correct');
+    playSoundEffect('./audio/correct.mp3');
+    gameEvents.emit('correct', { key: this.key });
   }
 
   incorrect() {
-    gameEvents.emit('incorrect');
+    playSoundEffect('./audio/wrong.mp3');
+    gameEvents.emit('incorrect', { key: this.key });
   }
 }

@@ -1,3 +1,5 @@
+import { GameManager } from '../manager/GameManager.js';
+
 export default class GameOverScene extends Phaser.Scene {
   constructor() {
     super('GameOverScene');
@@ -40,25 +42,20 @@ export default class GameOverScene extends Phaser.Scene {
       this.scene.stop();
       this.scene.stop('MainScene');
       this.scene.start('MainScene');
+      this.reset();
     })
 
     this.mainMenuButton.on('pointerdown', () => {
       this.scene.stop();
       this.scene.stop('MainScene');
       this.scene.start('GameStartScene');
+      this.reset();
     })
+  }
 
-    // 키보드 입력
-    this.input.keyboard.on('keydown-R', () => {
-      this.scene.stop();
-      this.scene.stop('MainScene');
-      this.scene.start('MainScene');
-    });
-
-    this.input.keyboard.on('keydown-M', () => {
-      this.scene.stop();
-      this.scene.stop('MainScene');
-      this.scene.start('GameStartScene');
-    });
+  reset() {
+    GameManager.score = 0;
+    GameManager.level = 1;
+    GameManager.targetScore = 650;
   }
 }
