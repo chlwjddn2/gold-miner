@@ -70,6 +70,8 @@ export default class MainScene extends Phaser.Scene {
     this.ropeShrinkingSound = this.sound.add('ropeShrinkingSound', { loop: true });
     this.bgmSound = this.sound.get('bgmSound');
 
+    this.baseSpeedText = this.createText(this.width - 250, 500, `${this.baseSpeed}`)
+
     this.anims.create({
       key: 'explosion',
       frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 11 }),
