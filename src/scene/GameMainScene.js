@@ -62,8 +62,6 @@ export default class MainScene extends Phaser.Scene {
     this.ropeShrinkingSound = this.sound.add('ropeShrinkingSound', { loop: true });
     this.bgmSound = this.sound.get('bgmSound');
 
-    this.lengthText = this.createText(this.width - 250, 500, `${this.lineLength}`)
-
     this.anims.create({
       key: 'explosion',
       frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 11 }),
@@ -178,8 +176,6 @@ export default class MainScene extends Phaser.Scene {
     const speedPerSecond = this.baseSpeed; // 예: 100px per second
     this.lineLength += (speedPerSecond * delta) / 1000; // ms → s
     this.rope.setScale(0.5, this.lineLength / 100);
-    this.lengthText.setText(`${Math.floor(this.lineLength)}`);
-    // 화면 밖 체크 또는 최대 길이 도달 시 줄어들게 전환
     
     if ((this.clamp.x > this.width) || (this.clamp.x < 0)  || (this.clamp.y > this.height)) {
       this.lineMoving = false;
