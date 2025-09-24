@@ -30,9 +30,16 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
+
+    const widthScale = this.cameras.main.width / 1280;
+    const heightScale = this.cameras.main.height / 720;
+
+    // 평균값 또는 원하는 축 기준으로 스케일 결정
+    const screenScale = (widthScale + heightScale) / 2;
+    this.baseSpeed = 10 * screenScale;
+
     this.angle = 0;
     this.swingTime = 0;           // 스윙 계산용 시간
-    this.baseSpeed = 10;          // 선 늘어나고 줄어드는 기본 속도
     this.lineLength = 100;        // 현재 선 길이
     this.lineMoving = false;      // 선 늘어나는 상태
     this.lineShrinking = false;   // 선 줄어드는 상태
