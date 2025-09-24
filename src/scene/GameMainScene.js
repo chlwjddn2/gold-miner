@@ -164,9 +164,7 @@ export default class MainScene extends Phaser.Scene {
     const speedPerSecond = this.baseSpeed;
     this.lineLength -= (speedPerSecond * delta) / 1000;
     this.rope.setScale(0.5, this.lineLength / 100);
-
-    this.ropeShrinkingSound.play();
-
+    
     if (this.attachedObject) {
       this.attachedObject.setPosition(this.clamp.x, this.clamp.y);
       this.attachedObject.setRotation(this.angle);
