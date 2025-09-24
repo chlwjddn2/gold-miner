@@ -35,6 +35,10 @@ export default class GoldMinerMain {
         constraintIterations: 2,
       }
     },
+    scale: {
+      mode: Phaser.Scale.FIT,         // 비율 유지하면서 화면에 꽉 차게
+      autoCenter: Phaser.Scale.CENTER_BOTH, // 자동 중앙 정렬
+    },
     pixelArt: false,
   }
 
@@ -50,7 +54,7 @@ export default class GoldMinerMain {
 
   init() {
     this.addEvent();
-    this.resizeContent();
+    // this.resizeContent();
   }
   
   addEvent() {
@@ -78,7 +82,7 @@ export default class GoldMinerMain {
       this.showHowToPopup(false);
     })
 
-    window.addEventListener('resize', this.resizeContent);
+    // window.addEventListener('resize', this.resizeContent);
   }
    
   showHowToPopup(bool) {
@@ -111,12 +115,12 @@ export default class GoldMinerMain {
     }
   }
     
-  resizeContent() {
-    const ratio = document.body.clientWidth / 1280;
-    this.wrap.style.top = `${(document.body.clientHeight - 720 * ratio) / 2}px`
-    this.wrap.style.left = '0px'
-    this.wrap.style.scale = `${ratio}`
-  }
+  // resizeContent() {
+  //   const ratio = document.body.clientWidth / 1280;
+  //   this.wrap.style.top = `${(document.body.clientHeight - 720 * ratio) / 2}px`
+  //   this.wrap.style.left = '0px'
+  //   this.wrap.style.scale = `${ratio}`
+  // }
 }
 
 const game = new GoldMinerMain();

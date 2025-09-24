@@ -84,13 +84,13 @@ img {
   font-display: swap;
 }
 
-#wrap {
+/* #wrap {
   width: 1280px;
   height: 720px;
   position: relative;
   overflow: hidden;
   transform-origin: 0% 0%;
-}
+} */
 
 [class*="container"] {
   position: absolute; 

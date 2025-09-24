@@ -30,10 +30,9 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    const screenScale = this.cameras.main.height / 720;
     this.angle = 0;
     this.swingTime = 0;           // 스윙 계산용 시간
-    this.baseSpeed = 10 * screenScale;          // 선 늘어나고 줄어드는 기본 속도
+    this.baseSpeed = 10;          // 선 늘어나고 줄어드는 기본 속도
     this.lineLength = 100;        // 현재 선 길이
     this.lineMoving = false;      // 선 늘어나는 상태
     this.lineShrinking = false;   // 선 줄어드는 상태
@@ -178,7 +177,7 @@ export default class MainScene extends Phaser.Scene {
     this.rope.setScale(0.5, this.lineLength / 100);
     
     // 화면 밖 체크 또는 최대 길이 도달 시 줄어들게 전환
-    if ((this.clamp.x > this.width) || (this.clamp.y > this.height)) {
+    if ((this.clamp.x > this.width) || (this.clamp.x < 0)  || (this.clamp.y > this.height)) {
       this.lineMoving = false;
       this.lineShrinking = true;
     }
