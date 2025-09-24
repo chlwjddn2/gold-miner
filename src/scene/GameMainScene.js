@@ -32,7 +32,7 @@ export default class MainScene extends Phaser.Scene {
   create() {
     this.angle = 0;
     this.swingTime = 0;           // 스윙 계산용 시간
-    this.baseSpeed = 10;          // 선 늘어나고 줄어드는 기본 속도
+    this.baseSpeed = 700;          // 선 늘어나고 줄어드는 기본 속도
     this.lineLength = 100;        // 현재 선 길이
     this.lineMoving = false;      // 선 늘어나는 상태
     this.lineShrinking = false;   // 선 줄어드는 상태
@@ -81,8 +81,8 @@ export default class MainScene extends Phaser.Scene {
 
   update(time, delta) {
     if (!this.attachedObject && !this.lineMoving && !this.lineShrinking) this.swingRope(delta);
-    if (this.lineMoving) this.expansionRope();
-    if (this.lineLength > 100 && this.lineShrinking) this.shrinkingRope();
+    if (this.lineMoving) this.expansionRope(delta);
+    if (this.lineLength > 100 && this.lineShrinking) this.shrinkingRope(delta);
     this.updateClamp();
   }
 
@@ -174,10 +174,11 @@ export default class MainScene extends Phaser.Scene {
     this.rope.setRotation(this.angle);
   };
 
-  expansionRope() { // 늘어나는 상태
-    this.lineLength += this.baseSpeed;
+  expansionRope(delta) { // 늘어나는 상태
+    const speedPerSecond = this.baseSpeed; // 예: 100px per second
+    this.lineLength += (speedPerSecond * delta) / 1000; // ms → s
     this.rope.setScale(0.5, this.lineLength / 100);
-    this.lengthText.setText(`${this.lineLength}`);
+    this.lengthText.setText(`${Math.floor(this.lineLength)}`);
     // 화면 밖 체크 또는 최대 길이 도달 시 줄어들게 전환
     
     if ((this.clamp.x > this.width) || (this.clamp.x < 0)  || (this.clamp.y > this.height)) {
@@ -186,8 +187,9 @@ export default class MainScene extends Phaser.Scene {
     }
   };
 
-  shrinkingRope() { // 줄어드는 상태
-    this.lineLength -= this.baseSpeed;
+  shrinkingRope(delta) { // 줄어드는 상태
+    const speedPerSecond = this.baseSpeed;
+    this.lineLength -= (speedPerSecond * delta) / 1000;
     this.rope.setScale(0.5, this.lineLength / 100);
 
     this.ropeShrinkingSound.play();
@@ -205,7 +207,7 @@ export default class MainScene extends Phaser.Scene {
     this.player.setFrame(0);
     this.ropeShrinkingSound.stop();
     this.power && this.powrCount --
-    this.baseSpeed = 10;
+    this.baseSpeed = 700;
 
     if (this.power && this.powrCount <= 0) this.power = false;
 
@@ -225,7 +227,7 @@ export default class MainScene extends Phaser.Scene {
   handleclampCollision(object) {  // 광물과 충돌 했을때 처리
     this.attachedObject = object.gameObject;
     this.matter.world.remove(object);
-    this.baseSpeed = this.power ? 10 : Math.floor(10 - (this.attachedObject.weight / 100) * (10 - 1));
+    this.baseSpeed = this.power ? this.baseSpeed : Math.floor(this.baseSpeed - (this.attachedObject.weight / 100) * (this.baseSpeed - 1));
     this.attachedObject.price < 50 ? this.wrongSound.play() : this.correctSound.play();
     this.lineMoving = false;
     this.lineShrinking = true;
@@ -246,13 +248,13 @@ export default class MainScene extends Phaser.Scene {
     explosion.on('animationcomplete', () => explosion.destroy());
     this.attachedObject.destroy(); // 혹은 점수 추가 등 원하는 처리
     this.attachedObject = null;
-    this.baseSpeed = 10;
+    this.baseSpeed = 700;
     this.priceText?.destroy();
   }
 
   powerUp() { // 파워 업
     this.power = true;
-    this.baseSpeed = 10;
+    this.baseSpeed = 700;
     this.powrCount = 3;
   }
 
