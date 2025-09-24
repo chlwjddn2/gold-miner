@@ -6,29 +6,6 @@ export default class MainScene extends Phaser.Scene {
     super('MainScene');
   }
 
-  preload() {
-    this.load.image('background', './images/background.png'); 
-    this.load.image('rope', './images/rope.png');
-    this.load.image('clamp', './images/clamp.png');
-    this.load.image('bomb', './images/bomb.png');
-    this.load.image('potion', './images/potion.png');
-    this.load.image('cable', './images/cable.png');
-
-    this.load.spritesheet('player', './images/player.png', { frameWidth: 116, frameHeight: 116 });
-    this.load.spritesheet('minerals', './images/mineral.png', { frameWidth: 532, frameHeight: 532 });
-    this.load.spritesheet('explosion', './images/explosion.png', { frameWidth: 96, frameHeight: 96 });
-    
-    this.load.tilemapTiledJSON(`map`, `./map/map.json`);
-
-    // 음원 로드
-    this.load.audio('ropeSound', './audio/rope.mp3');
-    this.load.audio('wrongSound', './audio/wrong.mp3');
-    this.load.audio('correctSound', './audio/correct.mp3');
-    this.load.audio('ropeShrinkingSound', './audio/rope_shirking.mp3');
-    this.load.audio('moneySound', './audio/money.mp3');
-    this.load.audio('bgmSound', './audio/bgm.mp3');
-  }
-
   create() {
     this.angle = 0;
     this.swingTime = 0;           // 스윙 계산용 시간
@@ -246,6 +223,7 @@ export default class MainScene extends Phaser.Scene {
     this.attachedObject = null;
     this.baseSpeed = 700;
     this.priceText?.destroy();
+    this.previewText?.destroy();
   }
 
   powerUp() { // 파워 업
