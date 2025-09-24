@@ -40,6 +40,7 @@ export default class MainScene extends Phaser.Scene {
 
     this.angle = 0;
     this.swingTime = 0;           // 스윙 계산용 시간
+    this.ropeSpeed = this.baseSpeed;
     this.lineLength = 100;        // 현재 선 길이
     this.lineMoving = false;      // 선 늘어나는 상태
     this.lineShrinking = false;   // 선 줄어드는 상태
@@ -180,7 +181,7 @@ export default class MainScene extends Phaser.Scene {
   };
 
   expansionRope() { // 늘어나는 상태
-    this.lineLength += this.baseSpeed;
+    this.lineLength += this.ropeSpeed;
     this.rope.setScale(0.5, this.lineLength / 100);
     
     // 화면 밖 체크 또는 최대 길이 도달 시 줄어들게 전환
@@ -191,7 +192,7 @@ export default class MainScene extends Phaser.Scene {
   };
 
   shrinkingRope() { // 줄어드는 상태
-    this.lineLength -= this.baseSpeed;
+    this.lineLength -= this.ropeSpeed;
     this.rope.setScale(0.5, this.lineLength / 100);
 
     this.ropeShrinkingSound.play();
@@ -209,7 +210,7 @@ export default class MainScene extends Phaser.Scene {
     this.player.setFrame(0);
     this.ropeShrinkingSound.stop();
     this.power && this.powrCount --
-    this.baseSpeed = 10;
+    this.ropeSpeed = this.baseSpeed;
 
     if (this.power && this.powrCount <= 0) this.power = false;
 
@@ -229,7 +230,7 @@ export default class MainScene extends Phaser.Scene {
   handleclampCollision(object) {  // 광물과 충돌 했을때 처리
     this.attachedObject = object.gameObject;
     this.matter.world.remove(object);
-    this.baseSpeed = this.power ? 10 : Math.floor(10 - (this.attachedObject.weight / 100) * (10 - 1));
+    this.ropeSpeed = this.power ? this.baseSpeed : Math.floor(this.baseSpeed - (this.attachedObject.weight / 100) * (this.baseSpeed - 1));
     this.attachedObject.price < 50 ? this.wrongSound.play() : this.correctSound.play();
     this.lineMoving = false;
     this.lineShrinking = true;
@@ -250,13 +251,13 @@ export default class MainScene extends Phaser.Scene {
     explosion.on('animationcomplete', () => explosion.destroy());
     this.attachedObject.destroy(); // 혹은 점수 추가 등 원하는 처리
     this.attachedObject = null;
-    this.baseSpeed = 10;
+    this.ropeSpeed = 10;
     this.priceText?.destroy();
   }
 
   powerUp() { // 파워 업
     this.power = true;
-    this.baseSpeed = 10;
+    this.ropeSpeed = 10;
     this.powrCount = 3;
   }
 
