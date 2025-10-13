@@ -1,4 +1,4 @@
-import { GameManager } from '../manager/GameManager.js';
+import GameManager from '../manager/GameManager.js';
 
 export default class GameOverScene extends Phaser.Scene {
   constructor() {
@@ -27,7 +27,6 @@ export default class GameOverScene extends Phaser.Scene {
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    // [M] Main Menu - 중앙 하단
     this.mainMenuButton = this.add.text(width / 2, height / 2 + 50, '[ M ] 메인메뉴', {
       fontSize: '24px',
       fill: '#ffff00',
@@ -42,20 +41,14 @@ export default class GameOverScene extends Phaser.Scene {
       this.scene.stop();
       this.scene.stop('MainScene');
       this.scene.start('MainScene');
-      this.reset();
+      GameManager.reset();
     })
 
     this.mainMenuButton.on('pointerdown', () => {
       this.scene.stop();
       this.scene.stop('MainScene');
       this.scene.start('GameStartScene');
-      this.reset();
+      GameManager.reset();
     })
-  }
-
-  reset() {
-    GameManager.score = 0;
-    GameManager.level = 1;
-    GameManager.targetScore = 650;
   }
 }

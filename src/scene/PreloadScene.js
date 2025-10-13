@@ -1,10 +1,12 @@
+import AudioManager from "../manager/AudioManager";
+
 export default class PreloadScene extends Phaser.Scene {
   constructor() {
     super('PreloadScene');
   }
 
   preload() {
-    this.cameras.main.setBackgroundColor('#ffffff');
+    this.cameras.main.setBackgroundColor('#DFF6F5');
 
     // ✅ 로딩 바 백그라운드
     const barWidth = 400;
@@ -50,13 +52,21 @@ export default class PreloadScene extends Phaser.Scene {
     
     this.load.audio('bgmSound', './audio/bgm.mp3');
     this.load.audio('clickSound', './audio/click.mp3');
+    
 
-    this.load.image('background', './images/background.png'); 
+    this.load.image('mainBackground', './images/background.png'); 
+    this.load.image('introBackground', './images/background1.png');   
+    this.load.image('storeBackground', './images/store_background.png');   
+
+
     this.load.image('rope', './images/rope.png');
     this.load.image('clamp', './images/clamp.png');
     this.load.image('bomb', './images/bomb.png');
     this.load.image('potion', './images/potion.png');
     this.load.image('cable', './images/cable.png');
+
+    this.load.image('howtoButton', './images/howtoButton.png');
+    this.load.image('playButton', './images/playButton.png');
 
     this.load.spritesheet('player', './images/player.png', { frameWidth: 116, frameHeight: 116 });
     this.load.spritesheet('minerals', './images/mineral.png', { frameWidth: 532, frameHeight: 532 });
@@ -74,8 +84,15 @@ export default class PreloadScene extends Phaser.Scene {
   }
 
   create() {
-    this.bgmSound = this.sound.add('bgmSound', { volume: 0.2 });
-    this.clickSound = this.sound.add('clickSound');
+    AudioManager.registerScene(this);
+    AudioManager.add('bgmSound', { volume: 0.1 });
+    AudioManager.add('clickSound');
+    AudioManager.add('ropeSound', { volume: 0.5 });
+    AudioManager.add('wrongSound', { volume: 0.5 });
+    AudioManager.add('correctSound');
+    AudioManager.add('moneySound');
+    AudioManager.add('ropeShrinkingSound', { loop: true });
+
     this.scene.start('GameStartScene');
   }
 }

@@ -1,4 +1,4 @@
-import { GameManager } from '../manager/GameManager.js';
+import GameManager from '../manager/GameManager.js';
 
 export default class LevelDoneScene extends Phaser.Scene {
   constructor() {
@@ -23,8 +23,14 @@ export default class LevelDoneScene extends Phaser.Scene {
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    // [R] Restart Game - 중앙
-    this.nexLevelButton = this.add.text(width / 2, height / 2 + 100, '다음 단계', {
+    this.storeButton = this.add.text(width / 2 - 100, height / 2 + 200, '상점 가기', {
+      fontSize: '24px',
+      fill: '#ffff00',
+      fontFamily: 'SchoolSafetyRoundedSmile',
+      fontStyle: 'bold'
+    }).setOrigin(0.5);
+
+    this.nexLevelButton = this.add.text(width / 2 + 100, height / 2 + 200, '다음 단계', {
       fontSize: '24px',
       fill: '#ffff00',
       fontFamily: 'SchoolSafetyRoundedSmile',
@@ -32,16 +38,17 @@ export default class LevelDoneScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     this.nexLevelButton.setInteractive({ useHandCursor: true });
+    this.storeButton.setInteractive({ useHandCursor: true });
+
+    this.storeButton.on('pointerdown', () => {
+      this.scene.stop('MainScene');
+      this.scene.start('GameStoreScene');
+    })
+
 
     this.nexLevelButton.on('pointerdown', () => {
-      this.levelUp();
-      this.scene.stop();
+      GameManager.levelUp();
       this.scene.start('MainScene');
     })
-  }
-
-  levelUp() {
-    GameManager.level += 1;
-    GameManager.targetScore = (135 * GameManager.level * GameManager.level) + (135 * GameManager.level) + 380;
   }
 }
