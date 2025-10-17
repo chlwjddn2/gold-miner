@@ -8,8 +8,9 @@ export default class GameStoreScene extends Phaser.Scene {
 
   create() {
     this.storeBackground = this.add.image(0, 0, 'storeBackground').setOrigin(0, 0); // 배경
-    this.bomb = this.add.image(250, 370, 'bomb').setScale(0.3).setInteractive({ useHandCursor: true });
-    this.potion = this.add.image(510, 380, 'potion').setScale(0.3).setInteractive({ useHandCursor: true });
+
+    this.bomb = this.add.image(330, 420, 'store_dynamite').setInteractive({ useHandCursor: true }).setScale(0.7);
+    this.potion = this.add.image(545, 420, 'store_potion').setInteractive({ useHandCursor: true }).setScale(0.7);
 
     this.nexLevelButton = this.add.text(this.scale.width - 200, this.scale.height / 2 + 100, '나가기', {
       fontSize: '24px',
@@ -23,6 +24,7 @@ export default class GameStoreScene extends Phaser.Scene {
     this.bomb.on('pointerdown', () => {
       this.disableItem(this.bomb);
       gameEvents.emit('item', { key: 'bomb' });
+      
     })
 
     this.potion.on('pointerdown', () => {
@@ -33,7 +35,7 @@ export default class GameStoreScene extends Phaser.Scene {
     this.nexLevelButton.on('pointerdown', () => {
       GameManager.levelUp(); 
       this.scene.stop('GameStoreScene');
-      this.scene.start('MainScene');
+      this.scene.start('GameMainScene');
     })
   }
 

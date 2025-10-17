@@ -48,39 +48,61 @@ export default class PreloadScene extends Phaser.Scene {
       percentText.destroy();
     });
     
-    this.load.spritesheet('bgmButton', './images/soundButton.png', { frameWidth: 532, frameHeight: 532 });
+    this.load.spritesheet('bgmButton', './images/miner_button_sound.png', { frameWidth: 84, frameHeight: 84 });
     
-    this.load.audio('bgmSound', './audio/bgm.mp3');
-    this.load.audio('clickSound', './audio/click.mp3');
     
+    //background
+    this.load.image('mainBackground', './images/miner_main_bg.png'); 
+    this.load.image('introBackground', './images/miner_intro_bg.png');   
+    this.load.image('storeBackground', './images/miner_store.png');   
 
-    this.load.image('mainBackground', './images/background.png'); 
-    this.load.image('introBackground', './images/background1.png');   
-    this.load.image('storeBackground', './images/store_background.png');   
+    // item
+    this.load.image('dynamite', './images/miner_items_dynamite.png');
+    this.load.image('potion', './images/miner_items_potion.png');
+    this.load.image('return', './images/return.png');
 
+    //storeItem
+    this.load.image('store_dynamite', './images/miner_store_shop_item_dynamite.png');
+    this.load.image('store_potion', './images/miner_store_shop_item_potion.png');
 
+    // player
+    this.load.spritesheet('miner', './images/miner_spritesheet.png', { frameWidth: 724, frameHeight: 780 });
+    this.load.spritesheet('hard_miner', './images/hard_miner_spritesheet.png', { frameWidth: 724, frameHeight: 780 });
+    this.load.spritesheet('cry_miner', './images/cry_miner_spritesheet.png', { frameWidth: 724, frameHeight: 780 });
+    this.load.spritesheet('smile_miner', './images/smile_miner_spritesheet.png', { frameWidth: 724, frameHeight: 780 });
+
+    // clamp
+    this.load.spritesheet('clamp', './images/clamp_sprite.png', { frameWidth: 72, frameHeight: 72 });
     this.load.image('rope', './images/rope.png');
-    this.load.image('clamp', './images/clamp.png');
-    this.load.image('bomb', './images/bomb.png');
-    this.load.image('potion', './images/potion.png');
-    this.load.image('cable', './images/cable.png');
 
+    // button
     this.load.image('howtoButton', './images/howtoButton.png');
     this.load.image('playButton', './images/playButton.png');
+    this.load.image('homeButton', './images/homeButton.png');
 
-    this.load.spritesheet('player', './images/player.png', { frameWidth: 116, frameHeight: 116 });
+    //text 
+    this.load.image('gameOverTxt', './images/game_over_text.png');
+
+    
+    this.load.image('miner_balloon', './images/miner_balloon.png');
+    this.load.image('miner_trophi_box', './images/miner_trophi_box.png');
+    this.load.image('miner_icon_coin', './images/miner_icon_coin.png');
+
     this.load.spritesheet('minerals', './images/mineral.png', { frameWidth: 532, frameHeight: 532 });
     this.load.spritesheet('explosion', './images/explosion.png', { frameWidth: 96, frameHeight: 96 });
     
     this.load.tilemapTiledJSON(`map`, `./map/map.json`);
 
     // 음원 로드
+    this.load.audio('bgmSound', './audio/bgm.mp3');
+    this.load.audio('clickSound', './audio/click.mp3');
     this.load.audio('ropeSound', './audio/rope.mp3');
     this.load.audio('wrongSound', './audio/wrong.mp3');
     this.load.audio('correctSound', './audio/correct.mp3');
     this.load.audio('ropeShrinkingSound', './audio/rope_shirking.mp3');
     this.load.audio('moneySound', './audio/money.mp3');
     this.load.audio('bgmSound', './audio/bgm.mp3');
+    this.load.audio('lose', './audio/lose.mp3');
   }
 
   create() {
@@ -92,6 +114,7 @@ export default class PreloadScene extends Phaser.Scene {
     AudioManager.add('correctSound');
     AudioManager.add('moneySound');
     AudioManager.add('ropeShrinkingSound', { loop: true });
+    AudioManager.add('lose', { volume: 0.3 });
 
     this.scene.start('GameStartScene');
   }

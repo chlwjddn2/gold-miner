@@ -1,4 +1,5 @@
 import { gameEvents } from '../manager/EventManager.js';
+import AudioManager from '../manager/AudioManager.js';
 import BgmButton from '../components/BgmButton.js';
 
 export default class GameStartScene extends Phaser.Scene {
@@ -7,18 +8,28 @@ export default class GameStartScene extends Phaser.Scene {
   }
 
   create() {
-    const { width, height } = this.cameras.main;
-    this.introBackground = this.add.image(0, 0, 'introBackground').setOrigin(0, 0); // 배경
-    this.bgmButton = new BgmButton(this, 80, 60);
-    this.playButton = this.add.image(width / 2 - 200, height / 2 + 100, 'playButton').setScale(0.7).setInteractive({ useHandCursor: true });
-    this.howToGameButton = this.add.image(width / 2 - 200, height / 2 + 200, 'howtoButton').setScale(0.7).setInteractive({ useHandCursor: true });
-    this.title = this.add.text(width / 2 - 200, height / 2 - 100, ' 황금 캐기 ', { fontSize: '62px', fontFamily: 'SchoolSafetyRoundedSmile', fontStyle: 'bold' }).setOrigin(0.5);
-    
-    this.addEvent();
-  }
+    this.introBackground = this.add.image(0, 0, 'introBackground')
+      .setOrigin(0, 0); // 배경
 
-  addEvent() {
-    this.playButton.on('pointerdown', async () => this.scene.start('MainScene'));
+    this.playButton = this.add.image(250, 400, 'playButton')
+      .setScale(0.6)
+      .setInteractive({ useHandCursor: true });
+
+    this.howToGameButton = this.add.image(250, 520, 'howtoButton')
+      .setScale(0.6)
+      .setInteractive({ useHandCursor: true });
+
+    this.bgmButton = new BgmButton(this, 80, 60);
+
+    //event
+    this.playButton.on('pointerover', () => this.playButton.setScale(0.65));
+    this.playButton.on('pointerout', () => this.playButton.setScale(0.6))
+    this.howToGameButton.on('pointerout', () => this.howToGameButton.setScale(0.6))
+    this.howToGameButton.on('pointerover', () => this.howToGameButton.setScale(0.65));
     this.howToGameButton.on('pointerdown', () => gameEvents.emit('howto'));
+    this.playButton.on('pointerdown', () => {
+      AudioManager.play('clickSound');
+      this.scene.start('GameMainScene');
+    });
   }
 }

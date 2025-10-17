@@ -8,45 +8,38 @@ export default class GameOverScene extends Phaser.Scene {
   create() {
     const { width, height } = this.scale;
 
+    //  this.gameOverBackground = this.add.image(0, 0, 'gameoverBackground').setOrigin(0, 0); // 배경
     // 반투명 배경
-    this.add.rectangle(width / 2, height / 2, 800, 600, 0x000000, 0.6);
+    this.add.rectangle(0, 0, width, height, 0x000000, 0.5).setOrigin(0, 0);
+    this.gameOverTxt = this.add.image(width / 2, height / 2 - 100, 'gameOverTxt');
 
-    // "Game Over" 텍스트 - 중앙 상단
-    this.add.text(width / 2, height / 2 - 100, '💀 게임 종료 💀', {
-      fontSize: '48px',
-      fill: '#ffffff',
-      fontFamily: 'SchoolSafetyRoundedSmile',
-      fontStyle: 'bold'
+    this.homeButton = this.add.image(width / 2, height / 2 + 230, 'homeButton')
+      .setScale(0.6)
+      .setInteractive({ useHandCursor: true });
+    
+
+    this.add.text(width / 2, height / 2 + 30, `${GameManager.level}단계 실패`, {
+      fontSize: '42px',
+        fontFamily: 'SchoolSafetyRoundedSmile',
+        color: '#fff',
+        fontStyle: 'bold',
+        stroke: '#000',
+        strokeThickness: 3,
     }).setOrigin(0.5);
 
-    // [R] Restart Game - 중앙
-    this.reStartButton = this.add.text(width / 2, height / 2, '[ R ] 재시작', {
-      fontSize: '24px',
-      fill: '#ffff00',
-      fontFamily: 'SchoolSafetyRoundedSmile',
-      fontStyle: 'bold'
+    this.add.text(width / 2, height / 2 + 100, `현재 점수: ${GameManager.score}`, {
+      fontSize: '42px',
+        fontFamily: 'SchoolSafetyRoundedSmile',
+        color: '#fff',
+        fontStyle: 'bold',
+        stroke: '#000',
+        strokeThickness: 3,
     }).setOrigin(0.5);
 
-    this.mainMenuButton = this.add.text(width / 2, height / 2 + 50, '[ M ] 메인메뉴', {
-      fontSize: '24px',
-      fill: '#ffff00',
-      fontFamily: 'SchoolSafetyRoundedSmile',
-      fontStyle: 'bold'
-    }).setOrigin(0.5);
-
-    this.reStartButton.setInteractive({ useHandCursor: true });
-    this.mainMenuButton.setInteractive({ useHandCursor: true });
-
-    this.reStartButton.on('pointerdown', () => {
+    this.homeButton.on('pointerover', () => this.homeButton.setScale(0.65))
+    this.homeButton.on('pointerout', () => this.homeButton.setScale(0.6));
+    this.homeButton.on('pointerdown', () => {
       this.scene.stop();
-      this.scene.stop('MainScene');
-      this.scene.start('MainScene');
-      GameManager.reset();
-    })
-
-    this.mainMenuButton.on('pointerdown', () => {
-      this.scene.stop();
-      this.scene.stop('MainScene');
       this.scene.start('GameStartScene');
       GameManager.reset();
     })

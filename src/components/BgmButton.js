@@ -6,8 +6,15 @@ export default class BgmButton{
     this.x = x;
     this.y = y;
 
-    this.button = this.scene.add.sprite(80, 60, 'bgmButton').setOrigin(0.5).setScale(0.1).setInteractive({ useHandCursor: true }).setFrame(GameManager.bgmOn ? 1 : 0).setDepth(100);
+    this.button = this.scene.add.sprite(80, 60, 'bgmButton')
+      .setOrigin(0.5)
+      .setScale(0.9)
+      .setInteractive({ useHandCursor: true })
+      .setFrame(GameManager.bgmOn ? 1 : 0);
+
     this.button.on('pointerdown', () => this.clickBgmButton());
+    this.button.on('pointerover', () => this.button.setScale(0.95));
+    this.button.on('pointerout', () => this.button.setScale(0.9));
   }
 
   clickBgmButton() {

@@ -41,14 +41,14 @@ export default class LevelDoneScene extends Phaser.Scene {
     this.storeButton.setInteractive({ useHandCursor: true });
 
     this.storeButton.on('pointerdown', () => {
-      this.scene.stop('MainScene');
+      this.scene.stop('GameMainScene');
       this.scene.start('GameStoreScene');
     })
 
 
     this.nexLevelButton.on('pointerdown', () => {
       GameManager.levelUp();
-      this.scene.start('MainScene');
+      this.scene.start('GameMainScene');
     })
   }
 }
