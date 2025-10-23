@@ -5,9 +5,9 @@ class GameManager {
     this.targetScore = 650;
     this.bgmOn = true;
 
-    this.dynamite = 1;
+    this.dynamite = 0;
 
-    this.potion = 2;
+    this.potion = 0;
     this.potionUseCount = 0;
   }
 
@@ -54,8 +54,7 @@ class GameManager {
     this.bgmOn = true;
     this.dynamite = 0;
     this.potion = 0;
-    this.return = 0;
-    this.potionUseCount = 3;
+    this.potionUseCount = 0;
   }
 }
 
