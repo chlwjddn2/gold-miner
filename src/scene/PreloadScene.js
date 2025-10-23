@@ -43,7 +43,6 @@ export default class PreloadScene extends Phaser.Scene {
     //text 
     this.load.image('fail', './images/miner_fail.png');
     this.load.image('success', './images/miner_success.png');
-    this.load.image('nextLevelTxt', './images/game_next_text.png');
     
     this.load.image('miner_balloon', './images/miner_balloon.png');
     this.load.image('miner_trophi_box', './images/miner_trophi_box.png');

@@ -8,6 +8,7 @@ export default class Mineral extends Phaser.Physics.Matter.Sprite {
     this.type = data.type;
     this.dataList = data;
     this.scene.add.existing(this);
+    this.name = data.name;
     
     this.init();
   }
