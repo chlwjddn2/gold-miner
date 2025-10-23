@@ -55,40 +55,50 @@ export default class Miner {
   createAnimation = () => { // 애니메이션 등록 함수
     const anims = this.scene.anims;
 
-    anims.create({
-      key: 'idle',
-      frames: anims.generateFrameNumbers('miner', { start: 0, end: 0 }),
-      frameRate: 1,
-      repeat: 0
-    });
+    if (!anims.get('idle')) {
+      anims.create({
+        key: 'idle',
+        frames: anims.generateFrameNumbers('miner', { start: 0, end: 0 }),
+        frameRate: 1,
+        repeat: 0
+      });
+    }
+    
+    if (!anims.get('mining')) {
+      anims.create({
+        key: 'mining',
+        frames: anims.generateFrameNumbers('miner', { start: 0, end: 2 }),
+        frameRate: 5,
+        repeat: -1
+      });
+    }
 
-    anims.create({
-      key: 'mining',
-      frames: anims.generateFrameNumbers('miner', { start: 0, end: 2 }),
-      frameRate: 5,
-      repeat: -1
-    });
+    if (!anims.get('mining_hard')) {
+      anims.create({
+        key: 'mining_hard',
+        frames: anims.generateFrameNumbers('hard_miner', { start: 0, end: 2 }),
+        frameRate: 5,
+        repeat: -1
+      });
+    }
 
-    anims.create({
-      key: 'mining_hard',
-      frames: anims.generateFrameNumbers('hard_miner', { start: 0, end: 2 }),
-      frameRate: 5,
-      repeat: -1
-    });
-
-    anims.create({
-      key: 'cry',
-      frames: anims.generateFrameNumbers('cry_miner', { start: 0, end: 0 }),
-      frameRate: 5,
-      repeat: -1
-    });
-
-    anims.create({
-      key: 'smile',
-      frames: anims.generateFrameNumbers('smile_miner', { start: 0, end: 0 }),
-      frameRate: 5,
-      repeat: -1
-    });
+    if (!anims.get('cry')) {
+      anims.create({
+        key: 'cry',
+        frames: anims.generateFrameNumbers('cry_miner', { start: 0, end: 0 }),
+        frameRate: 5,
+        repeat: -1
+      });
+    }
+    
+    if (!anims.get('smile')) {
+      anims.create({
+        key: 'smile',
+        frames: anims.generateFrameNumbers('smile_miner', { start: 0, end: 0 }),
+        frameRate: 5,
+        repeat: -1
+      });
+    }
   }
 
   expandStart = () => { // 줄 늘어나기 시작

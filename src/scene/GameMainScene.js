@@ -38,7 +38,7 @@ export default class MainScene extends Phaser.Scene {
 
     // 맵 생성
     this.map = new MapManager(this);
-    this.map.createMap(9);
+    this.map.createMap(GameManager.level);
     this.minerals = this.map.minerals;
 
     //점수 바 생성
