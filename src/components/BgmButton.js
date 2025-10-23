@@ -6,7 +6,7 @@ export default class BgmButton{
     this.x = x;
     this.y = y;
 
-    this.button = this.scene.add.sprite(80, 60, 'bgmButton')
+    this.button = this.scene.add.sprite(50, 50, 'bgmButton')
       .setOrigin(0.5)
       .setScale(0.9)
       .setInteractive({ useHandCursor: true })

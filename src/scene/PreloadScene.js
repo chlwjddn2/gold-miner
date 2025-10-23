@@ -5,61 +5,18 @@ export default class PreloadScene extends Phaser.Scene {
     super('PreloadScene');
   }
 
-  preload() {
-    this.cameras.main.setBackgroundColor('#DFF6F5');
-
-    // ✅ 로딩 바 백그라운드
-    const barWidth = 400;
-    const barHeight = 30;
-    const centerX = this.cameras.main.width / 2;
-    const centerY = this.cameras.main.height / 2;
-
-    const progressBox = this.add.graphics();
-    progressBox.fillStyle(0x222222, 0.8);
-    progressBox.fillRect(centerX - barWidth / 2, centerY - barHeight / 2, barWidth, barHeight);
-
-    const progressBar = this.add.graphics();
-
-    const loadingText = this.add.text(centerX, centerY - 50, 'Loading...', {
-      fontSize: '24px',
-      fill: '#000000',
-      fontFamily: 'Arial'
-    }).setOrigin(0.5);
-
-    const percentText = this.add.text(centerX, centerY, '0%', {
-      fontSize: '20px',
-      fill: '#ffffff',
-      fontFamily: 'Arial'
-    }).setOrigin(0.5);
-
-    // ✅ 로딩 진행 이벤트
-    this.load.on('progress', (value) => {
-      progressBar.clear();
-      progressBar.fillStyle(0xffffff, 1);
-      progressBar.fillRect(centerX - barWidth / 2, centerY - barHeight / 2, barWidth * value, barHeight);
-      percentText.setText(`${Math.floor(value * 100)}%`);
-    });
-
-    // ✅ 로딩 완료 이벤트
-    this.load.on('complete', () => {
-      progressBar.destroy();
-      progressBox.destroy();
-      loadingText.destroy();
-      percentText.destroy();
-    });
-    
-    this.load.spritesheet('bgmButton', './images/miner_button_sound.png', { frameWidth: 84, frameHeight: 84 });
-    
-    
+  preload = () => {
     //background
     this.load.image('mainBackground', './images/miner_main_bg.png'); 
     this.load.image('introBackground', './images/miner_intro_bg.png');   
     this.load.image('storeBackground', './images/miner_store.png');   
+    this.load.image('timerBackground', './images/miner_timer_bg.png');
+    this.load.image('gameOverBackground', './images/miner_game_over_bg.png');
+    this.load.image('nexLevelBackground', './images/miner_next_level_bg.png');
 
     // item
     this.load.image('dynamite', './images/miner_items_dynamite.png');
     this.load.image('potion', './images/miner_items_potion.png');
-    this.load.image('return', './images/return.png');
 
     //storeItem
     this.load.image('store_dynamite', './images/miner_store_shop_item_dynamite.png');
@@ -79,16 +36,20 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('howtoButton', './images/howtoButton.png');
     this.load.image('playButton', './images/playButton.png');
     this.load.image('homeButton', './images/homeButton.png');
+    this.load.image('storeButton', './images/miner_store_button.png')
+    this.load.image('nextLevelButton', './images/miner_next_button.png')
+    this.load.spritesheet('bgmButton', './images/miner_button_sound.png', { frameWidth: 84, frameHeight: 84 });
 
     //text 
-    this.load.image('gameOverTxt', './images/game_over_text.png');
-
+    this.load.image('fail', './images/miner_fail.png');
+    this.load.image('success', './images/miner_success.png');
+    this.load.image('nextLevelTxt', './images/game_next_text.png');
     
     this.load.image('miner_balloon', './images/miner_balloon.png');
     this.load.image('miner_trophi_box', './images/miner_trophi_box.png');
     this.load.image('miner_icon_coin', './images/miner_icon_coin.png');
 
-    this.load.spritesheet('minerals', './images/mineral.png', { frameWidth: 532, frameHeight: 532 });
+    this.load.spritesheet('minerals', './images/miner_mineral.png', { frameWidth: 532, frameHeight: 532 });
     this.load.spritesheet('explosion', './images/explosion.png', { frameWidth: 96, frameHeight: 96 });
     
     this.load.tilemapTiledJSON(`map`, `./map/map.json`);
@@ -101,11 +62,13 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.audio('correctSound', './audio/correct.mp3');
     this.load.audio('ropeShrinkingSound', './audio/rope_shirking.mp3');
     this.load.audio('moneySound', './audio/money.mp3');
-    this.load.audio('bgmSound', './audio/bgm.mp3');
+    
     this.load.audio('lose', './audio/lose.mp3');
+
+    this.loading();
   }
 
-  create() {
+  create = () =>{
     AudioManager.registerScene(this);
     AudioManager.add('bgmSound', { volume: 0.1 });
     AudioManager.add('clickSound');
@@ -117,5 +80,40 @@ export default class PreloadScene extends Phaser.Scene {
     AudioManager.add('lose', { volume: 0.3 });
 
     this.scene.start('GameStartScene');
+  }
+
+  loading = () => {
+    this.cameras.main.setBackgroundColor('#DFF6F5');
+    // ✅ 로딩 바 백그라운드
+    const barWidth = 400;
+    const barHeight = 30;
+    const centerX = this.cameras.main.width / 2;
+    const centerY = this.cameras.main.height / 2;
+
+    const progressBox = this.add.graphics();
+    progressBox.fillStyle(0x222222, 0.8);
+    progressBox.fillRect(centerX - barWidth / 2, centerY - barHeight / 2, barWidth, barHeight);
+
+    const progressBar = this.add.graphics();
+
+    this.add.text(centerX, centerY - 50, 'Loading...', {
+      fontSize: '24px',
+      fill: '#000000',
+      fontFamily: 'Arial'
+    }).setOrigin(0.5);
+
+    const percentText = this.add.text(centerX, centerY, '0%', {
+      fontSize: '20px',
+      fill: '#ffffff',
+      fontFamily: 'Arial'
+    }).setOrigin(0.5);
+
+    // ✅ 로딩 진행 이벤트
+    this.load.on('progress', (value) => {
+      progressBar.clear();
+      progressBar.fillStyle(0xffffff, 1);
+      progressBar.fillRect(centerX - barWidth / 2, centerY - barHeight / 2, barWidth * value, barHeight);
+      percentText.setText(`${Math.floor(value * 100)}%`);
+    });
   }
 }

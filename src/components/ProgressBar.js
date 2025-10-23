@@ -8,19 +8,19 @@ export default class ProgressBar {
 
     // 배경
     this.bg = scene.add.graphics();
-    this.bg.fillStyle(0xc18b01, 1);
+    this.bg.fillStyle(0x111111, 0.4);
     this.bg.fillRoundedRect(x, y, width, height, 12);
 
     // 채워지는 부분
     this.bar = scene.add.graphics();
 
-    this.scoreBox = scene.add.image(962, 51, 'miner_balloon');
+    this.scoreBox = scene.add.image(962, 51, 'miner_balloon').setDepth(10);
     this.scroeText = scene.add.text(962, 46, '', {
       fontSize: '28px',
       color: '#000',
       fontFamily: 'Cafe24Surround',
       fontStyle: 'bold'
-    }).setOrigin(0.5);
+    }).setOrigin(0.5).setDepth(15);
 
     this.targetScoreBox = scene.add.image(1200, 80, 'miner_trophi_box');
     this.targetScoreText = scene.add.text(1215, 107, '', {
@@ -45,7 +45,11 @@ export default class ProgressBar {
     this.scroeText.setText(`${current}`);
     this.targetScoreText.setText(`${target}`);
     const barWidth = this.width * this.progress;
+
+    
     this.coinIcon.setX(this.x + barWidth); // bar 끝 위치
+    this.scoreBox.setX(this.x + barWidth); // bar 끝 위치
+    this.scroeText.setX(this.x + barWidth); // bar 끝 위치
     this.coinIcon.setY(this.y + this.height / 2); // 높이는 바 중앙
   }
 

@@ -32,7 +32,7 @@ export default class GoldMinerMain {
       default: 'matter',
       matter: {
         gravity: { x: 0, y: 0 },      // 중력 설정 (기본값 y=1)
-        debug: true,                  // 디버그 모드 (바디 모양 보여줌)
+        // debug: true,                  // 디버그 모드 (바디 모양 보여줌)
         enableSleeping: false,        // 휴면모드 허용 여부
         positionIterations: 6,        // 물리 계산 반복 횟수
         velocityIterations: 4,
@@ -50,6 +50,7 @@ export default class GoldMinerMain {
     // 게임 방법 팝업
     this.howToContainer = document.querySelector(`.howto-container`);
     this.howToCloseButton = this.howToContainer.querySelector(`.closeButton`);
+    this.logoContainer = document.querySelector('.logo-container');
 
     // 퀴즈
     this.quizContainer = document.querySelector(`.quiz-container`);
@@ -60,9 +61,16 @@ export default class GoldMinerMain {
 
   init() {
     this.game = new Phaser.Game(this.#config);
+      this.logoContainer.classList.remove('show');
+    // setTimeout(() => {
+    //   this.game = new Phaser.Game(this.#config);
+    //   this.logoContainer.classList.remove('show');
+    // },3000);
+    
     this.addEvent();
     this.resizeContent();
     this.loadQuizData();
+
   }
 
   async loadQuizData() {

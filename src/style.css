@@ -91,10 +91,14 @@ img {
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Waguri';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2403@1.0/WAGURITTF.woff2') format('woff2');
+  font-weight: normal;
+  font-display: swap;
+}
+
 #wrap {
-  /* width: 100%;
-  height: 100%;
-  overflow: hidden; */
   width: 1280px;
   height: 720px;
   position: relative;
@@ -103,6 +107,199 @@ img {
 }
 
 [class*="container"] {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  width: 100%; 
+  height: 100%;
+  display: none;
+}
+
+[class*="container"].show {
+  display: flex;
+}
+
+
+[class*="inner"] {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 1rem;
+}
+
+
+/* 게임 방법 */
+.howto-inner {
+  width: 1232px;
+  height: 617px;
+  background: url(../public/images/miner_description_bg.png) no-repeat center / contain;
+  color: #fff;
+  font-family: 'Cafe24Surround';
+  padding: 4rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.howto-top {
+  display: flex;
+  gap: 1.5rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  
+}
+
+.howto-top img {
+  width: 648px;
+}
+
+.howto-image {
+  width: 72%;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+
+.howto-bottom {
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 2rem;
+  line-height: 3rem;
+  letter-spacing: 0.1rem;
+  font-family: 'Waguri';
+}
+
+.howto-bottom span {
+  color: #FEC32F;
+}
+
+
+[class*="howto-bubble"] {
+  position: absolute;
+  background: no-repeat center / contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.howto-bubble1 {
+  top: 70px;
+  left: 80px;
+  width: 372px;
+  height: 108px;
+  background-image: url(../public/images/miner_bubbld1.png);
+  padding: 0.3rem 1.5rem 0 0.6rem;
+}
+
+.howto-bubble2 {
+  top: 100px;
+  left: 652px;
+  width: 506px;
+  height: 94px;
+  background-image: url(../public/images/miner_bubbld2.png);
+  padding: 0.3rem 1rem 0 2.5rem;
+}
+
+.howto-bubble3 {
+  top: 270px;
+  left: 622px;
+  width: 484px;
+  height: 93px;
+  background-image: url(../public/images/miner_bubbld3.png);
+  padding: 0.3rem 1rem 0 1rem;
+}
+
+.howto-bubble1::after {
+  content: '';
+  position: absolute;
+  top: 21px;
+  right: -120px;
+  width: 110px;
+  height: 55px;
+  border: 5px solid #BD0000;
+  border-radius: 25px;
+}
+
+.howto-bubble1::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  right: -121px;
+  width: 112px;
+  height: 57px;
+  border: 7px solid #fff;
+  border-radius: 25px;
+}
+
+.howto-bubble2::after {
+  content: '';
+  position: absolute;
+  top: 21px;
+  left: -61px;
+  width: 50px;
+  height: 50px;
+  border: 5px solid #BD0000;
+  border-radius: 25px;
+}
+
+.howto-bubble2::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: -62px;
+  width: 52px;
+  height: 52px;
+  border: 7px solid #fff;
+  border-radius: 25px;
+}
+
+[class*="howto-bubble"] .item {
+  display: inline-block;
+  vertical-align: middle;
+  width: 50px;
+  height: 40px;
+  background: no-repeat center / contain;
+}
+
+[class*="howto-bubble"] .dynamite {
+  background-image: url(../public/images/dynamite_icon.png);
+}
+
+[class*="howto-bubble"] .potion {
+  background-image: url(../public/images/potion_icon.png);
+}
+
+[class*="howto-bubble"] p {
+  color: #111;
+  line-height: 2.2rem;
+  font-size: 1.6rem;
+}
+
+.howto-inner .closeButton {
+  position: absolute;
+  top: -46px;
+  right: -26px;
+  width: 70px; 
+  height: 70px;
+  border: none;  
+  cursor: pointer;
+  background: url(../public/images/miner_button_close.png) no-repeat center / contain;
+}
+
+.howto-inner .closeButton:hover{
+  transform: scale(1.1);
+}
+
+.logo-container {
+  background-color: #fff;
+}
+
+/* [class*="container"] {
   position: absolute; 
   top: 0; 
   left: 0; 
@@ -235,3 +432,14 @@ img {
   color: #fff;
   cursor: pointer;
 }
+
+.logoContainer {
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  position: relative;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */

@@ -6,34 +6,26 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   create() {
-    const { width, height } = this.scale;
 
-    //  this.gameOverBackground = this.add.image(0, 0, 'gameoverBackground').setOrigin(0, 0); // 배경
-    // 반투명 배경
-    this.add.rectangle(0, 0, width, height, 0x000000, 0.5).setOrigin(0, 0);
-    this.gameOverTxt = this.add.image(width / 2, height / 2 - 100, 'gameOverTxt');
-
-    this.homeButton = this.add.image(width / 2, height / 2 + 230, 'homeButton')
+    this.add.image(0, 0, 'gameOverBackground').setOrigin(0, 0); // 배경
+    this.add.image(470, 334, 'fail').setScale(0.9);
+    this.homeButton = this.add.image(360, 550, 'homeButton')
       .setScale(0.6)
       .setInteractive({ useHandCursor: true });
     
 
-    this.add.text(width / 2, height / 2 + 30, `${GameManager.level}단계 실패`, {
-      fontSize: '42px',
-        fontFamily: 'SchoolSafetyRoundedSmile',
-        color: '#fff',
+    this.add.text(300, 340, `${GameManager.level}단계`, {
+      fontSize: '56px',
+        fontFamily: 'Cafe24Surround',
+        color: '#6E2802',
         fontStyle: 'bold',
-        stroke: '#000',
-        strokeThickness: 3,
     }).setOrigin(0.5);
 
-    this.add.text(width / 2, height / 2 + 100, `현재 점수: ${GameManager.score}`, {
-      fontSize: '42px',
-        fontFamily: 'SchoolSafetyRoundedSmile',
+    this.add.text(360, 437, `${GameManager.score}`, {
+      fontSize: '56px',
+        fontFamily: 'Cafe24Surround',
         color: '#fff',
         fontStyle: 'bold',
-        stroke: '#000',
-        strokeThickness: 3,
     }).setOrigin(0.5);
 
     this.homeButton.on('pointerover', () => this.homeButton.setScale(0.65))
