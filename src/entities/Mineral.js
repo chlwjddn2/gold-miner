@@ -1,3 +1,5 @@
+import AudioManager from "../manager/AudioManager";
+
 export default class Mineral extends Phaser.Physics.Matter.Sprite {
   constructor(scene, data) {
     super(scene.matter.world, data.x, data.y, 'minerals', data.gid);
@@ -28,6 +30,7 @@ export default class Mineral extends Phaser.Physics.Matter.Sprite {
     
     this.scene.matter.world.remove(this.body); // Matter 바디 제거
     this.destroy(); // 스프라이트 제거
+    AudioManager.play('explode');
   }
 
   createAnimation = () => {

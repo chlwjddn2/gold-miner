@@ -18,9 +18,13 @@ class AudioManager {
     return this.sounds[key];
   }
 
-  play(key, config = {}) {
-    const sound = this.sounds[key] || this.add(key, config);
+  play(key, onComplete = null) {
+    const sound = this.sounds[key] || this.add(key);
     if (sound) sound.play();
+
+    if (typeof onComplete === 'function') {
+      sound.once('complete', onComplete);
+    }
   }
 
   pause(key) {

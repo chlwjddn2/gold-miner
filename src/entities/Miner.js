@@ -1,4 +1,5 @@
 import AudioManager from "../manager/AudioManager";
+import GameManager from "../manager/GameManager.js";
 import { gameEvents } from "../manager/EventManager.js";
 
 export default class Miner {
@@ -85,7 +86,7 @@ export default class Miner {
     if (!anims.get('cry')) {
       anims.create({
         key: 'cry',
-        frames: anims.generateFrameNumbers('cry_miner', { start: 0, end: 0 }),
+        frames: anims.generateFrameNumbers('cry_miner', { start: 0, end: 2 }),
         frameRate: 5,
         repeat: -1
       });
@@ -95,6 +96,24 @@ export default class Miner {
       anims.create({
         key: 'smile',
         frames: anims.generateFrameNumbers('smile_miner', { start: 0, end: 0 }),
+        frameRate: 5,
+        repeat: -1
+      });
+    }
+
+    if (!anims.get('power')) {
+      anims.create({
+        key: 'power',
+        frames: anims.generateFrameNumbers('power_miner', { start: 1, end: 1 }),
+        frameRate: 5,
+        repeat: 0
+      });
+    }
+
+    if (!anims.get('strong')) {
+      anims.create({
+        key: 'strong',
+        frames: anims.generateFrameNumbers('strong_miner', { start: 0, end: 2 }),
         frameRate: 5,
         repeat: -1
       });
@@ -119,8 +138,7 @@ export default class Miner {
   shrinkEnd = () => { // rope 줄어들기
     this.isShrink = false;
     this.lineLength = 100;
-    this.miner.stop(); // 애니메이션 종료
-    this.miner.play('idle');
+    
     gameEvents.emit('shrinkEnd');
   }
 
@@ -154,6 +172,20 @@ export default class Miner {
 
   adjustSpeed = (weight) => {
     this.shrinkSpeed = Math.floor(this.baseSpeed - (weight / 100) * (this.baseSpeed - 1));
-    this.shrinkSpeed < 350 ? this.miner.play('mining_hard') : this.miner.play('mining');  
+  }
+
+  playAnimation = (name) => {
+    this.miner.stop();
+    this.miner.play(name);
+  }
+
+  stopAmimation = () => {
+    this.miner.stop(); // 애니메이션 종료
+    const texture = GameManager.potionUseCount > 0 ? 'strong_miner' : 'miner';
+    this.setTexture(texture);
+  }
+
+  setTexture = (texture) => {
+    this.miner.setTexture(texture);
   }
 }

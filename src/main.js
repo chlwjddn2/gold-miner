@@ -61,7 +61,7 @@ export default class GoldMinerMain {
 
   init() {
     this.game = new Phaser.Game(this.#config);
-      this.logoContainer.classList.remove('show');
+    this.logoContainer.classList.remove('show');
     // setTimeout(() => {
     //   this.game = new Phaser.Game(this.#config);
     //   this.logoContainer.classList.remove('show');

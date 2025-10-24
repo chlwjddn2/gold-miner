@@ -15,17 +15,11 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    // this.angle = 0;
-    // this.swingTime = 0;           // 스윙 계산용 시간
-    // this.baseSpeed = 700;         // 선 늘어나고 줄어드는 기본 속도
-    // this.lineLength = 100;        // 현재 선 길이
-    // this.lineMoving = false;      // 선 늘어나는 상태
-    // this.lineShrinking = false;   // 선 줄어드는 상태
-    // this.attachedObject = null;   // 붙은 오브젝트
     this.width = this.cameras.main.width; 
     this.height = this.cameras.main.height;
     this.attachedObject = null;
     this.gameOver = false;
+    this.powering = false;
 
     this.bgm = this.sound.get('bgmSound');
     this.bgmButton = new BgmButton(this, 80, 60); // bgm 버튼
@@ -38,7 +32,7 @@ export default class MainScene extends Phaser.Scene {
 
     // 맵 생성
     this.map = new MapManager(this);
-    this.map.createMap(GameManager.level);
+    this.map.createMap(9);
     this.minerals = this.map.minerals;
 
     //점수 바 생성
@@ -56,14 +50,14 @@ export default class MainScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    if (this.gameOver) return;
+    if (this.gameOver || this.powering) return;
 
-    const { clamp, isExpand, isShrink, miner, lineLength } = this.miner;
+    const { clamp, isExpand, isShrink, lineLength } = this.miner;
     const isClampOutOfBounds = clamp.x > this.width || clamp.x < 0 || clamp.y > this.height;
 
     this.miner.update(delta);
 
-    if ((isClampOutOfBounds || this.attachedObject) && isExpand) this.miner.shrinkStart();
+    if (isClampOutOfBounds && isExpand) this.miner.shrinkStart();
     if (isShrink && lineLength <= 100) this.miner.shrinkEnd();
     if (this.attachedObject) this.pullAttachedObject();
     
@@ -87,12 +81,11 @@ export default class MainScene extends Phaser.Scene {
 
   collision = (event) => { // 충돌!
     const {bodyA, bodyB} = event.pairs[0];
-  
+
     if (bodyA.gameObject.name === bodyB.gameObject.name) return;
-    
     this.matter.world.remove(bodyB);
     this.attachedObject = bodyB.gameObject;
-    this.minerals.forEach((mineral) => mineral.tween?.pause());
+    this.miner.shrinkStart();
   }
 
   pullAttachedObject = () => {
@@ -111,30 +104,41 @@ export default class MainScene extends Phaser.Scene {
   }
 
   shrinkStart = () => {
-    if (GameManager.potionUseCount > 0) {
-      GameManager.consumePower();
-      this.miner.adjustSpeed(-50);
-    } else {
+    if (!GameManager.isPower) {
       const speed = this.attachedObject ? this.attachedObject.weight : 0;
       this.miner.adjustSpeed(speed);
     }
 
-    if (!this.attachedObject) return;
+    this.miner.clamp.body.collisionFilter.mask = 0;
+    this.minerals.forEach((mineral) => mineral.tween?.pause());
+    const type = this.attachedObject?.type;
 
-    const type = this.attachedObject.type;
-    type === 'rock' ? AudioManager.play('wrongSound') : AudioManager.play('correctSound');
+    this.miner.shrinkSpeed < 350 ? this.miner.playAnimation('mining_hard') : this.miner.playAnimation('mining');  
+    if (GameManager.isPower) this.miner.playAnimation('strong');
+    
+    
+    if (type === 'rock') AudioManager.play('wrongSound');
+    if (type === 'mole' || type === 'gold') AudioManager.play('correctSound');
+    if (type === 'bomb') this.explodeMineralArea();
+
   }
 
   shrinkEnd = () => {
-    if (!this.attachedObject) return;
+    this.miner.clamp.body.collisionFilter.mask = 0x0001;
+    this.minerals?.forEach((mineral) => {
+      if (mineral.body && mineral.tween?.paused) mineral.tween.resume();
+    });
 
-    GameManager.updateScore(this.attachedObject.price)
+    if (GameManager.isPower) GameManager.consumePower();
+    this.miner.stopAmimation();
+
+    if (!this.attachedObject) return;
+    GameManager.updateScore(this.attachedObject.price);
     this.progressBar.update(GameManager.score, GameManager.targetScore);
     this.attachedObject.tween?.stop();
     this.attachedObject.destroy();
     this.attachedObject = null;
     AudioManager.play('moneySound');
-    this.minerals.forEach((mineral) => mineral.tween?.paused && mineral.tween?.resume());
   }
 
   setItems = (x, y, type) => {
@@ -163,14 +167,38 @@ export default class MainScene extends Phaser.Scene {
   }
 
   explodeMineral = () => {
-    if (GameManager.dynamite <= 0) return;
-
-    GameManager.dynamite--;
-    this.dynamite.countText.setText(`${GameManager.dynamite}`);
     this.attachedObject.explode();
-    this.attachedObject.destroy();
     this.attachedObject = null;
     this.miner.adjustSpeed(0);
+  }
+
+  explodeMineralArea = () => {
+    const explosionRadius = 150; // 폭발 범위 반경 
+    const bombX = this.attachedObject.x; 
+    const bombY = this.attachedObject.y;
+
+    this.explodeMineral();
+
+    const nearbyMinerals = this.minerals.filter((mineral) => {
+      if (!mineral.active || !mineral.body) return false;
+      const dx = mineral.x - bombX;
+      const dy = mineral.y - bombY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      return distance < explosionRadius;
+    });
+
+    nearbyMinerals.forEach((mineral, index) => {
+      this.time.addEvent({
+        delay: index * 50, // 각 폭발 사이 0.2초 간격
+        callback: () => {
+          if (!mineral.active) return;
+          mineral.explode();
+        },
+        callbackScope: this
+      });
+    });
+
+    this.miner.playAnimation('cry');
   }
 
   useDynamite = () => {
@@ -178,19 +206,26 @@ export default class MainScene extends Phaser.Scene {
 
     GameManager.dynamite--;
     this.dynamite.countText.setText(`${GameManager.dynamite}`);
-    this.attachedObject.explode();
-    this.attachedObject.destroy();
-    this.attachedObject = null;
-    this.miner.adjustSpeed(0);
+    this.explodeMineral();
   }
 
   usePotion = () => {
-    if (GameManager.potion <= 0) return;
+    if (GameManager.potion <= 0 || GameManager.potionUseCount > 0) return;
+    
+    this.powering = true;
 
     GameManager.usePotion();
-    GameManager.consumePower();
+
     this.potion.countText.setText(`${GameManager.potion}`);
     this.miner.adjustSpeed(-50);
+    this.miner.stopAmimation();
+    this.miner.setTexture('power_miner');
+
+    AudioManager.play('powerUp', () => {
+      this.miner.setTexture('strong_miner');
+      this.powering = false;
+      if (this.miner.isShrink) this.miner.playAnimation('strong');
+    });
   }
 
   onTimerEnd() { // 타이머 끝난 후

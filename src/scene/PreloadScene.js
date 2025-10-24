@@ -28,6 +28,9 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.spritesheet('cry_miner', './images/cry_miner_spritesheet.png', { frameWidth: 724, frameHeight: 780 });
     this.load.spritesheet('smile_miner', './images/smile_miner_spritesheet.png', { frameWidth: 724, frameHeight: 780 });
 
+    this.load.spritesheet('power_miner', './images/power_miner.png', { frameWidth: 724, frameHeight: 780 });
+    this.load.spritesheet('strong_miner', './images/power_miner_spritesheet.png', { frameWidth: 724, frameHeight: 780 });
+
     // clamp
     this.load.spritesheet('clamp', './images/clamp_sprite.png', { frameWidth: 72, frameHeight: 72 });
     this.load.image('rope', './images/rope.png');
@@ -61,8 +64,9 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.audio('correctSound', './audio/correct.mp3');
     this.load.audio('ropeShrinkingSound', './audio/rope_shirking.mp3');
     this.load.audio('moneySound', './audio/money.mp3');
-    
+    this.load.audio('explode', './audio/explode.mp3');
     this.load.audio('lose', './audio/lose.mp3');
+    this.load.audio('powerUp', './audio/power_up.mp3');
 
     this.loading();
   }
@@ -77,6 +81,8 @@ export default class PreloadScene extends Phaser.Scene {
     AudioManager.add('moneySound');
     AudioManager.add('ropeShrinkingSound', { loop: true });
     AudioManager.add('lose', { volume: 0.3 });
+    AudioManager.add('explode', { volume: 0.7 })
+    AudioManager.add('powerUp', { volume: 0.7 })
 
     this.scene.start('GameStartScene');
   }

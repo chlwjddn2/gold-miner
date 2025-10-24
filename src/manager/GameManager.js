@@ -7,9 +7,11 @@ class GameManager {
 
     this.dynamite = 0;
 
-    this.potion = 0;
+    this.potion = 3;
     this.potionUseCount = 0;
   }
+
+  get isPower() { return this.potionUseCount > 0; }
 
   updateScore(amount) {
     this.score += amount
@@ -25,7 +27,7 @@ class GameManager {
       this.potionUseCount = 3;
     }
   }
-
+ 
   consumePower() {
     if (this.potionUseCount > 0) this.potionUseCount--;
   }
