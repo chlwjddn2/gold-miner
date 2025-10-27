@@ -9,7 +9,7 @@ export default class PreloadScene extends Phaser.Scene {
     //background
     this.load.image('mainBackground', './images/miner_main_bg.png'); 
     this.load.image('introBackground', './images/miner_intro_bg.png');   
-    this.load.image('storeBackground', './images/miner_store.png');   
+    this.load.image('storeBackground', './images/store/miner_store_bg.png');   
     this.load.image('timerBackground', './images/miner_timer_bg.png');
     this.load.image('gameOverBackground', './images/miner_game_over_bg.png');
     this.load.image('nexLevelBackground', './images/miner_next_level_bg.png');
@@ -19,29 +19,31 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('potion', './images/miner_items_potion.png');
 
     //storeItem
-    this.load.image('store_dynamite', './images/miner_store_shop_item_dynamite.png');
-    this.load.image('store_potion', './images/miner_store_shop_item_potion.png');
+    this.load.image('store_dynamite', './images/store/miner_store_shop_item_dynamite.png');
+    this.load.image('store_potion', './images/store/miner_store_shop_item_potion.png');
 
     // player
-    this.load.spritesheet('miner', './images/miner_spritesheet.png', { frameWidth: 724, frameHeight: 780 });
-    this.load.spritesheet('hard_miner', './images/hard_miner_spritesheet.png', { frameWidth: 724, frameHeight: 780 });
-    this.load.spritesheet('cry_miner', './images/cry_miner_spritesheet.png', { frameWidth: 724, frameHeight: 780 });
-    this.load.spritesheet('smile_miner', './images/smile_miner_spritesheet.png', { frameWidth: 724, frameHeight: 780 });
+    this.load.spritesheet('miner_idle', './images/miner/miner_idle_sprite.png', { frameWidth: 724, frameHeight: 780 });
+    this.load.spritesheet('miner_hard', './images/miner/miner_hard_sprite.png', { frameWidth: 724, frameHeight: 780 });
+    this.load.spritesheet('miner_cry', './images/miner/miner_cry_sprite.png', { frameWidth: 724, frameHeight: 780 });
+    this.load.spritesheet('miner_smile', './images/miner/miner_smile_sprite.png', { frameWidth: 724, frameHeight: 780 });
 
-    this.load.spritesheet('power_miner', './images/power_miner.png', { frameWidth: 724, frameHeight: 780 });
-    this.load.spritesheet('strong_miner', './images/power_miner_spritesheet.png', { frameWidth: 724, frameHeight: 780 });
+    this.load.image('miner_powerup', './images/miner/miner_powerup.png');
+    this.load.spritesheet('miner_power', './images/miner/miner_power_sprite.png', { frameWidth: 724, frameHeight: 780 });
 
     // clamp
-    this.load.spritesheet('clamp', './images/clamp_sprite.png', { frameWidth: 72, frameHeight: 72 });
-    this.load.image('rope', './images/rope.png');
+    this.load.spritesheet('clamp', './images/miner/miner_clamp_sprite.png', { frameWidth: 72, frameHeight: 72 });
+    this.load.image('rope', './images/miner/miner_rope.png');
 
     // button
-    this.load.image('howtoButton', './images/howtoButton.png');
-    this.load.image('playButton', './images/playButton.png');
-    this.load.image('homeButton', './images/homeButton.png');
-    this.load.image('storeButton', './images/miner_store_button.png')
-    this.load.image('nextLevelButton', './images/miner_next_button.png')
-    this.load.spritesheet('bgmButton', './images/miner_button_sound.png', { frameWidth: 84, frameHeight: 84 });
+    this.load.image('howtoButton', './images/button/howtoButton.png');
+    this.load.image('playButton', './images/button/playButton.png');
+    this.load.image('homeButton', './images/button/homeButton.png');
+    this.load.image('storeButton', './images/button/miner_store_button.png')
+    this.load.image('nextLevelButton', './images/button/miner_next_button.png')
+    this.load.image('miner_store_out_button', './images/button/miner_store_out_button.png')
+    this.load.spritesheet('bgmButton', './images/button/miner_button_sound.png', { frameWidth: 84, frameHeight: 84 });
+
 
     //text 
     this.load.image('fail', './images/miner_fail.png');

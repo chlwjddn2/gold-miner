@@ -51,6 +51,7 @@ export default class GoldMinerMain {
     this.howToContainer = document.querySelector(`.howto-container`);
     this.howToCloseButton = this.howToContainer.querySelector(`.closeButton`);
     this.logoContainer = document.querySelector('.logo-container');
+    this.gameContainer = document.querySelector('.game-container');
 
     // 퀴즈
     this.quizContainer = document.querySelector(`.quiz-container`);
@@ -58,6 +59,10 @@ export default class GoldMinerMain {
     
     this.init();
 	}
+
+  get isOpenedQuizPopup() {
+    return this.quizContainer.classList.contains('show');
+  }
 
   init() {
     this.game = new Phaser.Game(this.#config);
@@ -70,7 +75,6 @@ export default class GoldMinerMain {
     this.addEvent();
     this.resizeContent();
     this.loadQuizData();
-
   }
 
   async loadQuizData() {
@@ -86,6 +90,7 @@ export default class GoldMinerMain {
 
     // 상점 아이템 클릭 이벤트
     gameEvents.on('item', (event) => {
+      if (this.isOpenedQuizPopup) return;
       AudioManager.play('clickSound');
       this.renderQuestion(event.key); // 퀴즈 렌더링
       this.showQuizPopup(true); // 팝업 온
@@ -131,15 +136,19 @@ export default class GoldMinerMain {
     this.bindEvents();
   }
 
-  setQuizHtml(data = {}, key = 'bomb') { // 퀴즈 html 셋팅
+  setQuizHtml(data = {}, key = 'dynamite') { // 퀴즈 html 셋팅
     this.quizContainer.innerHTML = '';
     this.quizItems = [];
 
     const quizInner = document.createElement('div');
     quizInner.className = 'quiz-inner';
 
-    const quizQuestion = document.createElement('div');
-    quizQuestion.className = 'quiz-question';
+    const quizTop = document.createElement('div');
+    quizTop.className = 'quiz-top';
+
+    const quizBottom = document.createElement('div');
+    quizBottom.className = 'quiz-bottom';
+
 
     const quizImage = document.createElement('div');
     quizImage.className = 'quiz-image';
@@ -147,32 +156,39 @@ export default class GoldMinerMain {
     const quizText = document.createElement('div');
     quizText.className = 'quiz-text';
 
+    const p = document.createElement('p');
+    p.textContent = data.title;
+
     const img = document.createElement('img');
-    img.src =  `./images/${key}.png`; // 기본 이미지
+    img.src =  `./public/images/quiz/miner_store_${key}_char.png`; // 기본 이미지
     img.alt = '';
     quizImage.appendChild(img);
 
-    const p = document.createElement('p');
-    p.textContent = data.title;
+    
 
     const quizList = document.createElement('ul');
     quizList.className = 'quiz-list';
 
     data.list.forEach(text => {
       const li = document.createElement('li');
+      const button = document.createElement('button');
       li.className = 'quiz-item';
-      li.textContent = text;
       quizList.appendChild(li);
+      li.appendChild(button);
+      button.textContent = text;
       this.quizItems.push(li);
     });
 
-    quizText.appendChild(p);
-    quizInner.appendChild(quizQuestion);
-    quizInner.appendChild(quizList);
-    quizQuestion.appendChild(quizImage);
-    quizQuestion.appendChild(quizText);
-
     this.quizContainer.appendChild(quizInner);
+
+    quizInner.appendChild(quizTop);
+    quizInner.appendChild(quizBottom);
+
+    quizBottom.appendChild(quizList);
+
+    quizTop.appendChild(quizImage);
+    quizTop.appendChild(quizText)
+    quizText.appendChild(p);
   }
 
   bindEvents() { // 퀴즈 아이템 이벤트 추가
@@ -186,7 +202,7 @@ export default class GoldMinerMain {
 
   correct() { // 정답일 경우
     AudioManager.play('correctSound');
-    this.key === 'bomb' ? GameManager.bomb++ : GameManager.power++;
+    this.key === 'dynamite' ? GameManager.addDynamite() : GameManager.addPotion();;
   }
   
   incorrect() { // 오답일 경우

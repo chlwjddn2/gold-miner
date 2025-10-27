@@ -25,7 +25,7 @@ export default class Miner {
 
   create = () => {
     // 광부 생성
-    this.miner = this.scene.add.sprite(this.width / 2, 94, 'miner')
+    this.miner = this.scene.add.sprite(this.width / 2, 94, 'miner_idle')
       .setFrame(1)
       .setScale(0.17);
 
@@ -55,29 +55,20 @@ export default class Miner {
 
   createAnimation = () => { // 애니메이션 등록 함수
     const anims = this.scene.anims;
-
-    if (!anims.get('idle')) {
-      anims.create({
-        key: 'idle',
-        frames: anims.generateFrameNumbers('miner', { start: 0, end: 0 }),
-        frameRate: 1,
-        repeat: 0
-      });
-    }
     
     if (!anims.get('mining')) {
       anims.create({
         key: 'mining',
-        frames: anims.generateFrameNumbers('miner', { start: 0, end: 2 }),
+        frames: anims.generateFrameNumbers('miner_idle', { start: 0, end: 2 }),
         frameRate: 5,
         repeat: -1
       });
     }
 
-    if (!anims.get('mining_hard')) {
+    if (!anims.get('hard')) {
       anims.create({
-        key: 'mining_hard',
-        frames: anims.generateFrameNumbers('hard_miner', { start: 0, end: 2 }),
+        key: 'hard',
+        frames: anims.generateFrameNumbers('miner_hard', { start: 0, end: 2 }),
         frameRate: 5,
         repeat: -1
       });
@@ -86,7 +77,7 @@ export default class Miner {
     if (!anims.get('cry')) {
       anims.create({
         key: 'cry',
-        frames: anims.generateFrameNumbers('cry_miner', { start: 0, end: 2 }),
+        frames: anims.generateFrameNumbers('miner_cry', { start: 0, end: 2 }),
         frameRate: 5,
         repeat: -1
       });
@@ -95,7 +86,7 @@ export default class Miner {
     if (!anims.get('smile')) {
       anims.create({
         key: 'smile',
-        frames: anims.generateFrameNumbers('smile_miner', { start: 0, end: 0 }),
+        frames: anims.generateFrameNumbers('miner_smile', { start: 0, end: 0 }),
         frameRate: 5,
         repeat: -1
       });
@@ -104,16 +95,7 @@ export default class Miner {
     if (!anims.get('power')) {
       anims.create({
         key: 'power',
-        frames: anims.generateFrameNumbers('power_miner', { start: 1, end: 1 }),
-        frameRate: 5,
-        repeat: 0
-      });
-    }
-
-    if (!anims.get('strong')) {
-      anims.create({
-        key: 'strong',
-        frames: anims.generateFrameNumbers('strong_miner', { start: 0, end: 2 }),
+        frames: anims.generateFrameNumbers('miner_power', { start: 0, end: 2 }),
         frameRate: 5,
         repeat: -1
       });
@@ -131,7 +113,6 @@ export default class Miner {
   shrinkStart = () => {
     this.isExpand = false;
     this.isShrink = true;
-    
     gameEvents.emit('shrinkStart');
   }
 
@@ -181,8 +162,7 @@ export default class Miner {
 
   stopAmimation = () => {
     this.miner.stop(); // 애니메이션 종료
-    const texture = GameManager.potionUseCount > 0 ? 'strong_miner' : 'miner';
-    this.setTexture(texture);
+    this.setTexture('miner_idle');
   }
 
   setTexture = (texture) => {
