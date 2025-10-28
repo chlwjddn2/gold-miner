@@ -300,7 +300,7 @@ button {
   height: 70px;
   border: none;  
   cursor: pointer;
-  background: url(../public/images/miner_button_close.png) no-repeat center / contain;
+  background: url(../public/images/button/miner_button_close.png) no-repeat center / contain;
 }
 
 .howto-inner .closeButton:hover{

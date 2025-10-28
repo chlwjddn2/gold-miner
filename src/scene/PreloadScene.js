@@ -86,7 +86,7 @@ export default class PreloadScene extends Phaser.Scene {
     AudioManager.add('explode', { volume: 0.7 })
     AudioManager.add('powerUp', { volume: 0.7 })
 
-    this.scene.start('GameStartScene');
+    this.scene.start('GameStoreScene');
   }
 
   loading = () => {
