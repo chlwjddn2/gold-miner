@@ -7,12 +7,12 @@ export default class PreloadScene extends Phaser.Scene {
 
   preload = () => {
     //background
-    this.load.image('mainBackground', './images/miner_main_bg.png'); 
-    this.load.image('introBackground', './images/miner_intro_bg.png');   
-    this.load.image('storeBackground', './images/store/miner_store_bg.png');   
-    this.load.image('timerBackground', './images/miner_timer_bg.png');
-    this.load.image('gameOverBackground', './images/miner_game_over_bg.png');
-    this.load.image('nexLevelBackground', './images/miner_next_level_bg.png');
+    this.load.image('main_bg', './images/miner_main_bg.png'); 
+    this.load.image('intro_bg', './images/miner_intro_bg.png');   
+    this.load.image('store_bg', './images/store/miner_store_bg.png');   
+    this.load.image('timer_bg', './images/miner_timer_bg.png');
+    this.load.image('game_over_bg', './images/miner_game_over_bg.png');
+    this.load.image('next_level_bg', './images/miner_next_level_bg.png');
 
     // item
     this.load.image('dynamite', './images/miner_items_dynamite.png');
@@ -86,7 +86,7 @@ export default class PreloadScene extends Phaser.Scene {
     AudioManager.add('explode', { volume: 0.7 })
     AudioManager.add('powerUp', { volume: 0.7 })
 
-    this.scene.start('GameStoreScene');
+    this.scene.start('GameStartScene');
   }
 
   loading = () => {

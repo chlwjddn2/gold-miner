@@ -8,7 +8,7 @@ export default class GameStartScene extends Phaser.Scene {
   }
 
   create() {
-    this.introBackground = this.add.image(0, 0, 'introBackground')
+    this.introBackground = this.add.image(0, 0, 'intro_bg')
       .setOrigin(0, 0); // 배경
 
     this.playButton = this.add.image(250, 400, 'playButton')

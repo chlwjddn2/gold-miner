@@ -5,7 +5,7 @@ export default class Timer {
     this.onEndCallback = onEndCallback;
 
     // 텍스트 UI 생성
-    this.timerBg = scene.add.image(x, y, 'timerBackground');
+    this.timerBg = scene.add.image(x, y, 'timer_bg');
     this.timerText = scene.add.text(x, y - 15, `${this.remainingTime}`, {
       fontSize: '32px',
       fill: '#fff',

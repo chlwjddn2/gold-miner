@@ -31,7 +31,7 @@ export default class MainScene extends Phaser.Scene {
     this.bgmButton = new BgmButton(this, 80, 60); // bgm 버튼
 
     // bg 생성
-    this.background = this.add.image(0, 0, 'mainBackground').setOrigin(0, 0).setInteractive().setDepth(-1); // 배경
+    this.background = this.add.image(0, 0, 'main_bg').setOrigin(0, 0).setInteractive().setDepth(-1); // 배경
 
     // miner 생성
     this.miner = new Miner(this, this.width / 2, 94);

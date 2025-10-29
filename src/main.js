@@ -10,8 +10,8 @@ import GameStoreScene from './scene/GameStoreScene.js';
 import PreloadScene from './scene/PreloadScene.js';
 import GameManager from './manager/GameManager.js';
 import AudioManager from './manager/AudioManager.js';
-import loadJson from './utils/loadJson';
-import findRandomArray from './utils/findRandomArray';
+
+import Quiz from './Quiz';
 
 export default class GoldMinerMain {
   #config = {
@@ -64,8 +64,9 @@ export default class GoldMinerMain {
     return this.quizContainer.classList.contains('show');
   }
 
-  init() {
+  init = () => {
     this.game = new Phaser.Game(this.#config);
+    this.quiz = new Quiz();
     this.logoContainer.classList.remove('show');
     // setTimeout(() => {
     //   this.game = new Phaser.Game(this.#config);
@@ -74,34 +75,16 @@ export default class GoldMinerMain {
     
     this.addEvent();
     this.resizeContent();
-    this.loadQuizData();
   }
 
-  async loadQuizData() {
-    this.quizData = await loadJson('./quizData/data.json');
-  }
-  
-  addEvent() {
+  addEvent = () => {
     // 팝업 이벤트
-    gameEvents.on('howto', () => {
-      AudioManager.play('clickSound');
-      this.showHowToPopup(true);
-    });
-
+    gameEvents.on('howto', () => this.clickHowto());
     // 상점 아이템 클릭 이벤트
-    gameEvents.on('item', (event) => {
-      if (this.isOpenedQuizPopup) return;
-      AudioManager.play('clickSound');
-      this.renderQuestion(event.key); // 퀴즈 렌더링
-      this.showQuizPopup(true); // 팝업 온
-    })
-
+    gameEvents.on('clickItem', (event) => this.clickItem(event.key));
+    gameEvents.on('quizFinish', (event) => this.quizFinish(event));
     // 게임 방법 팝업 닫기
-    this.howToCloseButton.addEventListener('click', () => {
-      AudioManager.play('clickSound');
-      this.showHowToPopup(false);
-    })
-
+    this.howToCloseButton.addEventListener('click', () => this.clickHowToClose());
     window.addEventListener('resize', this.resizeContent); // 스케일 조절
   }
    
@@ -118,12 +101,14 @@ export default class GoldMinerMain {
   }
 
   showQuizPopup(bool) { // 퀴즈 팝업
+    const quizInner = this.quizContainer.querySelector('.quiz-inner');
+    gsap.killTweensOf(quizInner);
     if (bool) {
       this.quizContainer.classList.add('show');
-      gsap.fromTo(this.quizContainer.querySelector('.quiz-inner'), {top: '150%'}, {top: '50%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)"});
+      gsap.fromTo(quizInner, {top: '150%'}, {top: '50%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)"});
     } 
     else {
-      gsap.fromTo(this.quizContainer.querySelector('.quiz-inner'), {top: '50%'}, {top: '150%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)", onComplete: () => { 
+      gsap.fromTo(quizInner, {top: '50%'}, {top: '150%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)", onComplete: () => { 
         this.quizContainer.classList.remove('show');
       }});
     }
@@ -136,61 +121,6 @@ export default class GoldMinerMain {
     this.bindEvents();
   }
 
-  setQuizHtml(data = {}, key = 'dynamite') { // 퀴즈 html 셋팅
-    this.quizContainer.innerHTML = '';
-    this.quizItems = [];
-
-    const quizInner = document.createElement('div');
-    quizInner.className = 'quiz-inner';
-
-    const quizTop = document.createElement('div');
-    quizTop.className = 'quiz-top';
-
-    const quizBottom = document.createElement('div');
-    quizBottom.className = 'quiz-bottom';
-
-
-    const quizImage = document.createElement('div');
-    quizImage.className = 'quiz-image';
-
-    const quizText = document.createElement('div');
-    quizText.className = 'quiz-text';
-
-    const p = document.createElement('p');
-    p.textContent = data.title;
-
-    const img = document.createElement('img');
-    img.src =  `./public/images/quiz/miner_store_${key}_char.png`; // 기본 이미지
-    img.alt = '';
-    quizImage.appendChild(img);
-
-    
-
-    const quizList = document.createElement('ul');
-    quizList.className = 'quiz-list';
-
-    data.list.forEach(text => {
-      const li = document.createElement('li');
-      const button = document.createElement('button');
-      li.className = 'quiz-item';
-      quizList.appendChild(li);
-      li.appendChild(button);
-      button.textContent = text;
-      this.quizItems.push(li);
-    });
-
-    this.quizContainer.appendChild(quizInner);
-
-    quizInner.appendChild(quizTop);
-    quizInner.appendChild(quizBottom);
-
-    quizBottom.appendChild(quizList);
-
-    quizTop.appendChild(quizImage);
-    quizTop.appendChild(quizText)
-    quizText.appendChild(p);
-  }
-
   bindEvents() { // 퀴즈 아이템 이벤트 추가
     this.quizItems?.forEach((item, index) => {
       item.addEventListener('click', () => {
@@ -198,15 +128,6 @@ export default class GoldMinerMain {
         this.showQuizPopup(false);
       });
     });
-  }
-
-  correct() { // 정답일 경우
-    AudioManager.play('correctSound');
-    this.key === 'dynamite' ? GameManager.addDynamite() : GameManager.addPotion();;
-  }
-  
-  incorrect() { // 오답일 경우
-    AudioManager.play('wrongSound');
   }
     
   resizeContent() { // 스케일 조절 함수
@@ -221,6 +142,34 @@ export default class GoldMinerMain {
       this.wrap.style.left = `0px`
       this.wrap.style.scale = `${this.ratio}`
     }
+  }
+
+  clickItem = (key) => {
+    AudioManager.play('clickSound');
+    this.showQuizPopup(true);
+    this.quiz.setQuizItem(key);
+  }
+
+  clickHowto = () => {
+    AudioManager.play('clickSound');
+    this.showHowToPopup(true);
+  }
+
+  clickHowToClose = () => {
+    AudioManager.play('clickSound');
+    this.showHowToPopup(false);
+  }
+
+  quizFinish = (event) => {
+    const { result, key } = event;
+    if (result) {
+      AudioManager.play('correctSound');
+      key === 'dynamite' ? GameManager.addDynamite() : GameManager.addPotion();;
+    } else {
+      AudioManager.play('wrongSound');
+    }
+
+    this.showQuizPopup(false);
   }
 }
 

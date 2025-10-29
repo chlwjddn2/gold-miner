@@ -7,32 +7,33 @@ export default class GameStoreScene extends Phaser.Scene {
   }
 
   create() {
-    this.storeBackground = this.add.image(0, 0, 'storeBackground').setOrigin(0, 0); // 배경
-
-    this.bomb = this.add.image(330, 420, 'store_dynamite').setInteractive({ useHandCursor: true }).setScale(0.7);
-    this.potion = this.add.image(545, 420, 'store_potion').setInteractive({ useHandCursor: true }).setScale(0.7);
-
+    this.storeBackground = this.add.image(0, 0, 'store_bg').setOrigin(0, 0); // 배경
+    this.storeDynamite = this.add.image(330, 420, 'store_dynamite').setInteractive({ useHandCursor: true }).setScale(0.7);
+    this.storePotion = this.add.image(545, 420, 'store_potion').setInteractive({ useHandCursor: true }).setScale(0.7);
     this.nexLevelButton = this.add.image(432, 620, 'miner_store_out_button').setInteractive({ useHandCursor: true }).setScale(0.8)
 
     this.addEvent();
   }
 
   addEvent() {
-
-    this.nexLevelButton.setInteractive({ useHandCursor: true });
-
-    this.bomb.on('pointerdown', () => {
-      this.disableItem(this.bomb);
-      gameEvents.emit('item', { key: 'dynamite' });
+    this.storeDynamite.on('pointerdown', () => {
+      this.disableItem(this.storeDynamite);
+      gameEvents.emit('clickItem', { key: 'dynamite' });
     })
 
-    this.potion.on('pointerdown', () => {
-      this.disableItem(this.potion);
-      gameEvents.emit('item', { key: 'potion' });
+    this.storePotion.on('pointerdown', () => {
+      this.disableItem(this.storePotion);
+      gameEvents.emit('clickItem', { key: 'potion' });
     })
 
     this.nexLevelButton.on('pointerover', () => this.nexLevelButton.setScale(0.85));
     this.nexLevelButton.on('pointerout', () => this.nexLevelButton.setScale(0.8));
+
+    this.storeDynamite.on('pointerover', () => this.storeDynamite.setScale(0.75));
+    this.storeDynamite.on('pointerout', () => this.storeDynamite.setScale(0.7));
+
+    this.storePotion.on('pointerover', () => this.storePotion.setScale(0.75));
+    this.storePotion.on('pointerout', () => this.storePotion.setScale(0.7));
 
     this.nexLevelButton.on('pointerdown', () => {
       GameManager.levelUp(); 
@@ -42,7 +43,7 @@ export default class GameStoreScene extends Phaser.Scene {
   }
 
 
-  disableItem(item) {
+  disableItem = (item) => {
     item.disableInteractive().setAlpha(0.5);
     this.input.setDefaultCursor('default'); 
   }

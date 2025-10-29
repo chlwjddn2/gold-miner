@@ -8,7 +8,7 @@ export default class LevelDoneScene extends Phaser.Scene {
   create() {
     const { width, height } = this.scale;
 
-    this.add.image(0, 0, 'nexLevelBackground').setOrigin(0, 0); // 배경
+    this.add.image(0, 0, 'next_level_bg').setOrigin(0, 0); // 배경
     this.add.image(560, 340, 'success').setScale(0.85);
 
     this.add.text(396, 344, `${GameManager.level}단계`, {

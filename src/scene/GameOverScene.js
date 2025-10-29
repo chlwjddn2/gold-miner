@@ -7,7 +7,7 @@ export default class GameOverScene extends Phaser.Scene {
 
   create() {
 
-    this.add.image(0, 0, 'gameOverBackground').setOrigin(0, 0); // 배경
+    this.add.image(0, 0, 'game_over_bg').setOrigin(0, 0); // 배경
     this.add.image(470, 334, 'fail').setScale(0.9);
     this.homeButton = this.add.image(360, 550, 'homeButton')
       .setScale(0.6)
