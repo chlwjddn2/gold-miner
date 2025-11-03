@@ -30,7 +30,7 @@ export default class Quiz {
     const quizData = this.quizData[this.quizStep];
     this.key = key;
     this.quizText.innerHTML = this.quizData[this.quizStep].title;
-    this.quizImage.src = `./public/images/quiz/miner_store_${this.key}_char.png`;
+    this.quizImage.src = `./images/quiz/miner_store_${this.key}_char.png`;
     this.quizList.forEach((list, index) => list.innerHTML = quizData.list[index]);
     this.isSolved = false;
   }
