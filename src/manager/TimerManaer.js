@@ -6,10 +6,12 @@ export default class Timer {
 
     // 텍스트 UI 생성
     this.timerBg = scene.add.image(x, y, 'timer_bg');
-    this.timerText = scene.add.text(x, y - 15, `${this.remainingTime}`, {
-      fontSize: '32px',
+    console.log(y);
+    
+    this.timerText = scene.add.text(x - 5, y - 15, `${this.remainingTime}`, {
+      fontSize: '28px',
       fill: '#fff',
-      fontFamily: 'SchoolSafetyRoundedSmile',
+      fontFamily: 'Cafe24Surround',
       fontStyle: 'bold'
     }).setDepth(100);
 

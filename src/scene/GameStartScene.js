@@ -7,18 +7,7 @@ export default class GameStartScene extends Phaser.Scene {
     super('GameStartScene');
   }
 
-  preload = () => {
-    this.load.image('intro_bg', './images/miner_intro_bg.png');   
-    this.load.image('play_button', './images/button/play_button.png');
-    this.load.image('howto_button', './images/button/howto_button.png');
-    this.load.spritesheet('bgm_button', './images/button/miner_button_sound.png', { frameWidth: 84, frameHeight: 84 });
-    this.load.audio('clickSound', './audio/click.mp3');
-  }
-
   create() {
-    AudioManager.registerScene(this);
-    AudioManager.add('clickSound');
-    
     this.introBackground = this.add.image(0, 0, 'intro_bg')
       .setOrigin(0, 0); // 배경
 
@@ -39,7 +28,7 @@ export default class GameStartScene extends Phaser.Scene {
     this.howToGameButton.on('pointerover', () => this.howToGameButton.setScale(0.65));
     this.howToGameButton.on('pointerdown', () => gameEvents.emit('howto'));
     this.playButton.on('pointerdown', () => {
-      this.scene.start('PreloadScene');
+      this.scene.start('GameMainScene');
       AudioManager.play('clickSound');
       gameEvents.emit('playGame');
     });

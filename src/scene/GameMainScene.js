@@ -165,7 +165,7 @@ export default class MainScene extends Phaser.Scene {
     const offsetX = sprite.displayWidth / 2 - 30;
     const offsetY = -sprite.displayHeight / 2 + 20;
     const count = type  === 'dynamite' ? GameManager.dynamite : GameManager.potion;
-
+         
     const xText = sprite.x + offsetX;
     const yText = sprite.y + offsetY;
 

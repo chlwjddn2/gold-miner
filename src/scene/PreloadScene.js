@@ -13,6 +13,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('timer_bg', './images/miner_timer_bg.png');
     this.load.image('game_over_bg', './images/miner_game_over_bg.png');
     this.load.image('next_level_bg', './images/miner_next_level_bg.png');
+    this.load.image('intro_bg', './images/miner_intro_bg.png');   
 
     // item
     this.load.image('dynamite', './images/miner_items_dynamite.png');
@@ -41,7 +42,8 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('next_level_button', './images/button/miner_next_button.png')
     this.load.image('miner_store_out_button', './images/button/miner_store_out_button.png')
     this.load.spritesheet('bgm_button', './images/button/miner_button_sound.png', { frameWidth: 84, frameHeight: 84 });
-
+    this.load.image('howto_button', './images/button/howto_button.png');
+    this.load.image('play_button', './images/button/play_button.png');
 
     //text 
     this.load.image('fail', './images/miner_fail.png');
@@ -67,6 +69,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.audio('lose', './audio/lose.mp3');
     this.load.audio('powerUp', './audio/power_up.mp3');
     this.load.audio('win', './audio/win.mp3');
+    this.load.audio('clickSound', './audio/click.mp3');
 
     this.loading();
   }
@@ -83,12 +86,14 @@ export default class PreloadScene extends Phaser.Scene {
     AudioManager.add('explode', { volume: 0.7 })
     AudioManager.add('powerUp', { volume: 0.7 })
     AudioManager.add('win');
-
-    this.scene.start('GameMainScene');
+    AudioManager.add('clickSound');
+    this.time.delayedCall(300, () => {
+      this.scene.start('GameStartScene');
+    });
   }
 
   loading = () => {
-    this.cameras.main.setBackgroundColor('#DFF6F5');
+    this.cameras.main.setBackgroundColor('#562202');
     // ✅ 로딩 바 백그라운드
     const barWidth = 400;
     const barHeight = 30;
@@ -100,12 +105,6 @@ export default class PreloadScene extends Phaser.Scene {
     progressBox.fillRect(centerX - barWidth / 2, centerY - barHeight / 2, barWidth, barHeight);
 
     const progressBar = this.add.graphics();
-
-    this.add.text(centerX, centerY - 50, 'Loading...', {
-      fontSize: '24px',
-      fill: '#000000',
-      fontFamily: 'Arial'
-    }).setOrigin(0.5);
 
     const percentText = this.add.text(centerX, centerY, '0%', {
       fontSize: '20px',

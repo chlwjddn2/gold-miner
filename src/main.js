@@ -20,7 +20,7 @@ export default class GoldMinerMain {
     type: Phaser.CANVAS,
     width: 1280,
     height: 720,
-    backgroundColor: '#88C2F6',
+    backgroundColor: '#562202',
     scene: [
       Boot,
       PreloadScene,
@@ -68,11 +68,6 @@ export default class GoldMinerMain {
     this.quiz = new Quiz();
     this.game = new Phaser.Game(this.#config);
     this.logoContainer.classList.remove('show');
-    // setTimeout(() => {
-    //   this.game = new Phaser.Game(this.#config);
-    //   this.logoContainer.classList.remove('show');
-    // },2000);
-    
     this.addEvent();
     this.resizeContent();
   }

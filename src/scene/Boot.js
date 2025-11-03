@@ -56,7 +56,7 @@ export default class Boot extends Scene {
     });
     
     this.time.delayedCall(1500, () => {
-      this.scene.start('GameStartScene');
+      this.scene.start('PreloadScene');
     });
   }
 }
