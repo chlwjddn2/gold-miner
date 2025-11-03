@@ -38,7 +38,7 @@ export default class MainScene extends Phaser.Scene {
     
     // 맵 생성
     this.map = new MapManager(this);
-    this.map.createMap(4);
+    this.map.createMap(GameManager.level);
     this.minerals = this.map.minerals;
     this.moles = this.minerals.filter((mineral) => mineral.type === 'mole');
     this.clamp = this.miner.clamp;
