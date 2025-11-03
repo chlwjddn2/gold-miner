@@ -162,7 +162,7 @@ export default class MainScene extends Phaser.Scene {
   setItems = (x, y, type) => {
     const sprite = this.add.image(x, y, type).setInteractive({ useHandCursor: true });
 
-    const offsetX = sprite.displayWidth / 2 - 30;
+    const offsetX = type  === 'dynamite' ? sprite.displayWidth / 2 - 35 : sprite.displayWidth / 2 - 31;
     const offsetY = -sprite.displayHeight / 2 + 20;
     const count = type  === 'dynamite' ? GameManager.dynamite : GameManager.potion;
          
@@ -175,8 +175,8 @@ export default class MainScene extends Phaser.Scene {
       fontFamily: 'Cafe24Surround',
     });
 
-    const countText = this.add.text(xText + 10, yText + 2, `${count}`, {
-      fontSize: '18px',
+    const countText = this.add.text(xText + 10, yText , `${count}`, {
+      fontSize: '22px',
       color: '#fff',
       fontFamily: 'Cafe24Surround',
     });
