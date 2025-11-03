@@ -9,7 +9,7 @@ export default class GameOverScene extends Phaser.Scene {
 
     this.add.image(0, 0, 'game_over_bg').setOrigin(0, 0); // 배경
     this.add.image(470, 334, 'fail').setScale(0.9);
-    this.homeButton = this.add.image(360, 550, 'homeButton')
+    this.homeButton = this.add.image(360, 550, 'home_button')
       .setScale(0.6)
       .setInteractive({ useHandCursor: true });
     

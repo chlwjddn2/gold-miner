@@ -38,7 +38,7 @@ export default class MainScene extends Phaser.Scene {
     
     // 맵 생성
     this.map = new MapManager(this);
-    this.map.createMap(GameManager.level);
+    this.map.createMap(4);
     this.minerals = this.map.minerals;
     this.moles = this.minerals.filter((mineral) => mineral.type === 'mole');
     this.clamp = this.miner.clamp;
@@ -59,7 +59,7 @@ export default class MainScene extends Phaser.Scene {
     this.addEvent(); // 이벤트 등록
   }
 
-  update(time, delta) {
+  update(_, delta) {
     if (this.gameOver || this.powering) return;
 
     const { clamp, isExpand, isShrink, lineLength } = this.miner;
@@ -242,8 +242,6 @@ export default class MainScene extends Phaser.Scene {
       this.miner.setTexture('miner_power');
       this.powering = false;
       this.potionUseCount = 3;
-      console.log(this.potionUseCount);
-      
     });
   }
 
@@ -251,6 +249,14 @@ export default class MainScene extends Phaser.Scene {
     this.gameOver = true;
     this.scene.pause();        
     AudioManager.stopAll();
+    console.log(GameManager.level);
+    
+    
+    if (GameManager.level === 10) {
+      this.scene.launch('GameFinishScene');
+      return;
+    }
+
     if (GameManager.score < GameManager.targetScore) {
       this.scene.launch('GameOverScene');
       AudioManager.play('lose');

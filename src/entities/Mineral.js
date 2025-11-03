@@ -3,7 +3,7 @@ import AudioManager from "../manager/AudioManager";
 export default class Mineral extends Phaser.Physics.Matter.Sprite {
   constructor(scene, data) {
     super(scene.matter.world, data.x, data.y, 'minerals', data.gid);
-
+    
     this.scene = scene;
     this.price = data.price;
     this.weight = data.weight;
@@ -11,7 +11,6 @@ export default class Mineral extends Phaser.Physics.Matter.Sprite {
     this.dataList = data;
     this.scene.add.existing(this);
     this.name = data.name;
-    
     this.init();
   }
 
@@ -46,7 +45,7 @@ export default class Mineral extends Phaser.Physics.Matter.Sprite {
 
   makeMole = (mole, x) => {
     mole.setSensor(true); //물리 설정 끄기
-
+    mole.setScale(0.25);
     const sceneWidth = this.scene.cameras.main.width;
     const moveDistance = Phaser.Math.Between(100, 300);
     const duration = Phaser.Math.Between(2000, 3000);

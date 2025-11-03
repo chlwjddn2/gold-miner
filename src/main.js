@@ -7,6 +7,8 @@ import GameMainScene from './scene/GameMainScene.js';
 import LevelDoneScene from './scene/LevelDoneScene.js';
 import GameOverScene from './scene/GameOverScene.js';
 import GameStoreScene from './scene/GameStoreScene.js';
+import GameFinishScene from './scene/GameFinishScene.js';
+import Boot from './scene/Boot.js';
 import PreloadScene from './scene/PreloadScene.js';
 import GameManager from './manager/GameManager.js';
 import AudioManager from './manager/AudioManager.js';
@@ -20,12 +22,14 @@ export default class GoldMinerMain {
     height: 720,
     backgroundColor: '#88C2F6',
     scene: [
+      Boot,
       PreloadScene,
       GameStoreScene,
       GameMainScene,
       GameStartScene,
       LevelDoneScene,
       GameOverScene,
+      GameFinishScene
     ],
     parent: 'game-container',
     physics: {
@@ -60,18 +64,14 @@ export default class GoldMinerMain {
     this.init();
 	}
 
-  get isOpenedQuizPopup() {
-    return this.quizContainer.classList.contains('show');
-  }
-
   init = () => {
-    this.game = new Phaser.Game(this.#config);
     this.quiz = new Quiz();
+    this.game = new Phaser.Game(this.#config);
     this.logoContainer.classList.remove('show');
     // setTimeout(() => {
     //   this.game = new Phaser.Game(this.#config);
     //   this.logoContainer.classList.remove('show');
-    // },3000);
+    // },2000);
     
     this.addEvent();
     this.resizeContent();
@@ -83,12 +83,13 @@ export default class GoldMinerMain {
     // 상점 아이템 클릭 이벤트
     gameEvents.on('clickItem', (event) => this.clickItem(event.key));
     gameEvents.on('quizFinish', (event) => this.quizFinish(event));
+    gameEvents.on('playGame', () => this.quiz.reset());
     // 게임 방법 팝업 닫기
     this.howToCloseButton.addEventListener('click', () => this.clickHowToClose());
     window.addEventListener('resize', this.resizeContent); // 스케일 조절
   }
    
-  showHowToPopup(bool) { // 게임방법 팝업
+  showHowToPopup = (bool) => { // 게임방법 팝업
     const innerContaion = this.howToContainer.querySelector('.howto-inner');
     if (bool) {
       this.howToContainer.classList.add('show');
@@ -100,7 +101,7 @@ export default class GoldMinerMain {
     }
   }
 
-  showQuizPopup(bool) { // 퀴즈 팝업
+  showQuizPopup = (bool) => { // 퀴즈 팝업
     const quizInner = this.quizContainer.querySelector('.quiz-inner');
     gsap.killTweensOf(quizInner);
     if (bool) {
@@ -113,24 +114,8 @@ export default class GoldMinerMain {
       }});
     }
   }
-
-  renderQuestion(key) { // 퀴즈 셋팅
-    this.randomData = findRandomArray(this.quizData);
-    this.key = key;
-    this.setQuizHtml(this.randomData, key);
-    this.bindEvents();
-  }
-
-  bindEvents() { // 퀴즈 아이템 이벤트 추가
-    this.quizItems?.forEach((item, index) => {
-      item.addEventListener('click', () => {
-        index === this.randomData.answer ? this.correct() : this.incorrect();
-        this.showQuizPopup(false);
-      });
-    });
-  }
     
-  resizeContent() { // 스케일 조절 함수
+  resizeContent = () => { // 스케일 조절 함수
     if (1280 / 720 <= document.body.clientWidth / document.body.clientHeight) {
       this.ratio = document.body.clientHeight / 720;
       this.wrap.style.top = `0px`

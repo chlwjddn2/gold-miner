@@ -8,7 +8,7 @@ export default class PreloadScene extends Phaser.Scene {
   preload = () => {
     //background
     this.load.image('main_bg', './images/miner_main_bg.png'); 
-    this.load.image('intro_bg', './images/miner_intro_bg.png');   
+    
     this.load.image('store_bg', './images/store/miner_store_bg.png');   
     this.load.image('timer_bg', './images/miner_timer_bg.png');
     this.load.image('game_over_bg', './images/miner_game_over_bg.png');
@@ -36,13 +36,11 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('rope', './images/miner/miner_rope.png');
 
     // button
-    this.load.image('howtoButton', './images/button/howtoButton.png');
-    this.load.image('playButton', './images/button/playButton.png');
-    this.load.image('homeButton', './images/button/homeButton.png');
-    this.load.image('storeButton', './images/button/miner_store_button.png')
-    this.load.image('nextLevelButton', './images/button/miner_next_button.png')
+    this.load.image('home_button', './images/button/home_button.png');
+    this.load.image('store_button', './images/button/miner_store_button.png')
+    this.load.image('next_level_button', './images/button/miner_next_button.png')
     this.load.image('miner_store_out_button', './images/button/miner_store_out_button.png')
-    this.load.spritesheet('bgmButton', './images/button/miner_button_sound.png', { frameWidth: 84, frameHeight: 84 });
+    this.load.spritesheet('bgm_button', './images/button/miner_button_sound.png', { frameWidth: 84, frameHeight: 84 });
 
 
     //text 
@@ -53,14 +51,13 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('miner_trophi_box', './images/miner_trophi_box.png');
     this.load.image('miner_icon_coin', './images/miner_icon_coin.png');
 
-    this.load.spritesheet('minerals', './images/miner_mineral.png', { frameWidth: 532, frameHeight: 532 });
+    this.load.spritesheet('minerals', './images/miner_mineral2.png', { frameWidth: 532, frameHeight: 532 });
     this.load.spritesheet('explosion', './images/explosion.png', { frameWidth: 96, frameHeight: 96 });
     
     this.load.tilemapTiledJSON(`map`, `./map/map.json`);
 
     // 음원 로드
     this.load.audio('bgmSound', './audio/bgm.mp3');
-    this.load.audio('clickSound', './audio/click.mp3');
     this.load.audio('ropeSound', './audio/rope.mp3');
     this.load.audio('wrongSound', './audio/wrong.mp3');
     this.load.audio('correctSound', './audio/correct.mp3');
@@ -76,7 +73,6 @@ export default class PreloadScene extends Phaser.Scene {
   create = () =>{
     AudioManager.registerScene(this);
     AudioManager.add('bgmSound', { volume: 0.1 });
-    AudioManager.add('clickSound');
     AudioManager.add('ropeSound', { volume: 0.5 });
     AudioManager.add('wrongSound', { volume: 0.5 });
     AudioManager.add('correctSound');
@@ -86,7 +82,7 @@ export default class PreloadScene extends Phaser.Scene {
     AudioManager.add('explode', { volume: 0.7 })
     AudioManager.add('powerUp', { volume: 0.7 })
 
-    this.scene.start('GameStartScene');
+    this.scene.start('GameMainScene');
   }
 
   loading = () => {

@@ -20,6 +20,12 @@ export default class Quiz {
     this.addEvent();
   }
 
+  addEvent = () => {
+    this.quizList.forEach((list, index) => {
+      list.addEventListener('click', () => this.clickItem(index));
+    })
+  }
+
   setQuizItem = (key) => {
     const quizData = this.quizData[this.quizStep];
     this.key = key;
@@ -28,13 +34,6 @@ export default class Quiz {
     this.quizList.forEach((list, index) => list.innerHTML = quizData.list[index]);
     this.isSolved = false;
   }
-
-  addEvent = () => {
-    this.quizList.forEach((list, index) => {
-      list.addEventListener('click', () => this.clickItem(index));
-    })
-  }
-
 
   clickItem = (index) => {
     if (this.isSolved) return;

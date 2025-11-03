@@ -25,10 +25,10 @@ export default class LevelDoneScene extends Phaser.Scene {
         fontStyle: 'bold',
     }).setOrigin(0.5);
 
-    this.storeButton = this.add.image(width / 2 - 150, height / 2 + 260, 'storeButton')
+    this.storeButton = this.add.image(width / 2 - 150, height / 2 + 260, 'store_button')
       .setInteractive({ useHandCursor: true });
 
-    this.nexLevelButton = this.add.image(width / 2 + 150, height / 2 + 260, 'nextLevelButton')
+    this.nexLevelButton = this.add.image(width / 2 + 150, height / 2 + 260, 'next_level_button')
       .setInteractive({ useHandCursor: true });
 
 
