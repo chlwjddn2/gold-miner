@@ -66,6 +66,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.audio('explode', './audio/explode.mp3');
     this.load.audio('lose', './audio/lose.mp3');
     this.load.audio('powerUp', './audio/power_up.mp3');
+    this.load.audio('win', './audio/win.mp3');
 
     this.loading();
   }
@@ -81,6 +82,7 @@ export default class PreloadScene extends Phaser.Scene {
     AudioManager.add('lose', { volume: 0.3 });
     AudioManager.add('explode', { volume: 0.7 })
     AudioManager.add('powerUp', { volume: 0.7 })
+    AudioManager.add('win');
 
     this.scene.start('GameMainScene');
   }

@@ -1,4 +1,5 @@
 import GameManager from '../manager/GameManager.js';
+import AudioManager from '../manager/AudioManager.js';
 
 export default class LevelDoneScene extends Phaser.Scene {
   constructor() {
@@ -39,12 +40,14 @@ export default class LevelDoneScene extends Phaser.Scene {
     this.nexLevelButton.on('pointerout', () => this.nexLevelButton.setScale(1));
 
     this.storeButton.on('pointerdown', () => {
+      AudioManager.play('clickSound')
       this.scene.stop('GameMainScene');
       this.scene.start('GameStoreScene');
     })
 
 
     this.nexLevelButton.on('pointerdown', () => {
+      AudioManager.play('clickSound')
       GameManager.levelUp();
       this.scene.start('GameMainScene');
     })

@@ -141,7 +141,7 @@ export default class MainScene extends Phaser.Scene {
     // 타입에 따라 설정
     const type = this.attachedObject?.type;
     if (type === 'mole' || type === 'rock') AudioManager.play('wrongSound');
-    if (type === 'gold' || type ==='diamond') AudioManager.play('correctSound');
+    if (type === 'gold' || type ==='diamond' || type === 'random') AudioManager.play('correctSound');
     if (type === 'bomb') this.explodeMineralArea();
   }
 
@@ -263,6 +263,7 @@ export default class MainScene extends Phaser.Scene {
     }
     else {
       this.scene.launch('LevelDoneScene');
+      AudioManager.play('win');
     }
   }
 
