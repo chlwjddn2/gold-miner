@@ -53,7 +53,6 @@ export default class MainScene extends Phaser.Scene {
     // 아이템 생성
     this.dynamite = this.setItems(405, 123, 'dynamite');
     this.potion = this.setItems(498, 123, 'potion');
-    
 
     this.resetAnimation(); // 애니메이션 초기화
     this.addEvent(); // 이벤트 등록
@@ -217,7 +216,6 @@ export default class MainScene extends Phaser.Scene {
     });
 
     this.miner.playAnimation('cry');
-    
   }
 
   useDynamite = () => {
@@ -249,20 +247,13 @@ export default class MainScene extends Phaser.Scene {
     this.gameOver = true;
     this.scene.pause();        
     AudioManager.stopAll();
-    console.log(GameManager.level);
-    
-    
-    if (GameManager.level === 10) {
-      this.scene.launch('GameFinishScene');
-      return;
-    }
 
     if (GameManager.score < GameManager.targetScore) {
       this.scene.launch('GameOverScene');
       AudioManager.play('lose');
-    }
-    else {
-      this.scene.launch('LevelDoneScene');
+    } else {
+      if (GameManager.level === 10) this.scene.launch('GameFinishScene');
+      else this.scene.launch('LevelDoneScene');
       AudioManager.play('win');
     }
   }

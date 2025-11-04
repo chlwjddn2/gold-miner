@@ -21,7 +21,7 @@ export default class ProgressBar {
       fontFamily: 'Cafe24Surround',
       fontStyle: 'bold'
     }).setOrigin(0.5).setDepth(15);
-
+    
     this.targetScoreBox = scene.add.image(1200, 80, 'miner_trophi_box');
     this.targetScoreText = scene.add.text(1215, 107, '', {
       fontSize: '28px',
@@ -37,7 +37,7 @@ export default class ProgressBar {
     this.progress = Phaser.Math.Clamp(current / target, 0, 1);
 
     if (this.progress > 0) {
-      this.bar.clear();
+      this.bar.clear(); 
       this.bar.fillStyle(0xf7db49, 1);
       this.bar.fillRoundedRect(this.x, this.y, this.width * this.progress, this.height, 12);
     }

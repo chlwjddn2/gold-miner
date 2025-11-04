@@ -15,6 +15,8 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('intro_bg', './images/miner_intro_bg.png');   
     this.load.image('finish_bg', './images/finish/miner_finish_bg.png');
 
+    this.load.image('intro_title', './images/miner_intro_title.png');
+
     // item
     this.load.image('dynamite', './images/miner_items_dynamite.png');
     this.load.image('potion', './images/miner_items_potion.png');
