@@ -10,7 +10,7 @@ export default class BgmButton{
       .setOrigin(0.5)
       .setScale(0.9)
       .setInteractive({ useHandCursor: true })
-      .setFrame(GameManager.bgmOn ? 1 : 0);
+      .setFrame(GameManager.bgmOn ? 0 : 1);
 
     this.button.on('pointerdown', () => this.clickBgmButton());
     this.button.on('pointerover', () => this.button.setScale(0.95));
@@ -19,7 +19,7 @@ export default class BgmButton{
 
   clickBgmButton() {
     GameManager.toggleBgm();
-    this.button.setFrame(GameManager.bgmOn ? 1 : 0);
+    this.button.setFrame(GameManager.bgmOn ? 0 : 1);
   }
 }
 

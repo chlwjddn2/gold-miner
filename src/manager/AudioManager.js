@@ -12,19 +12,14 @@ class AudioManager {
   // 오디오 로드 및 인스턴스 생성
   add(key, config = {}) {
     if (!this.scene) throw new Error('Scene not registered');
-    if (!this.sounds[key]) {
-      this.sounds[key] = this.scene.sound.add(key, config);
-    }
+    if (!this.sounds[key]) this.sounds[key] = this.scene.sound.add(key, config);
     return this.sounds[key];
   }
 
   play(key, onComplete = null) {
     const sound = this.sounds[key] || this.add(key);
     if (sound) sound.play();
-
-    if (typeof onComplete === 'function') {
-      sound.once('complete', onComplete);
-    }
+    if (typeof onComplete === 'function') sound.once('complete', onComplete);
   }
 
   pause(key) {

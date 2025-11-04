@@ -8,12 +8,12 @@ export default class PreloadScene extends Phaser.Scene {
   preload = () => {
     //background
     this.load.image('main_bg', './images/miner_main_bg.png'); 
-    
     this.load.image('store_bg', './images/store/miner_store_bg.png');   
     this.load.image('timer_bg', './images/miner_timer_bg.png');
     this.load.image('game_over_bg', './images/miner_game_over_bg.png');
     this.load.image('next_level_bg', './images/miner_next_level_bg.png');
     this.load.image('intro_bg', './images/miner_intro_bg.png');   
+    this.load.image('finish_bg', './images/finish/miner_finish_bg.png');
 
     // item
     this.load.image('dynamite', './images/miner_items_dynamite.png');
@@ -48,10 +48,14 @@ export default class PreloadScene extends Phaser.Scene {
     //text 
     this.load.image('fail', './images/miner_fail.png');
     this.load.image('success', './images/miner_success.png');
+    this.load.image('complete', './images/finish/miner_complete.png');
     
     this.load.image('miner_balloon', './images/miner_balloon.png');
     this.load.image('miner_trophi_box', './images/miner_trophi_box.png');
     this.load.image('miner_icon_coin', './images/miner_icon_coin.png');
+    this.load.image('miner_score_box', './images/finish/miner_score_box.png')
+
+    this.load.spritesheet('loading_miner', './images/loading_miner.png', { frameWidth: 81, frameHeight: 67 });
 
     this.load.spritesheet('minerals', './images/miner_mineral2.png', { frameWidth: 532, frameHeight: 532 });
     this.load.spritesheet('explosion', './images/explosion.png', { frameWidth: 96, frameHeight: 96 });
@@ -87,37 +91,51 @@ export default class PreloadScene extends Phaser.Scene {
     AudioManager.add('powerUp', { volume: 0.7 })
     AudioManager.add('win');
     AudioManager.add('clickSound');
-    this.time.delayedCall(300, () => {
-      this.scene.start('GameStartScene');
-    });
+
+    this.loadingMiner.stop('loading_move');
+    this.time.delayedCall(300, () => this.scene.start('GameStartScene'));
   }
 
   loading = () => {
-    this.cameras.main.setBackgroundColor('#562202');
-    // ✅ 로딩 바 백그라운드
-    const barWidth = 400;
-    const barHeight = 30;
-    const centerX = this.cameras.main.width / 2;
-    const centerY = this.cameras.main.height / 2;
+    const size = { 
+      width: 500, 
+      height: 30, 
+      boxStroke: 3, 
+      barStroke: 2 
+    };
 
-    const progressBox = this.add.graphics();
-    progressBox.fillStyle(0x222222, 0.8);
-    progressBox.fillRect(centerX - barWidth / 2, centerY - barHeight / 2, barWidth, barHeight);
+    const center = { 
+      x: this.cameras.main.width / 2 - size.width / 2, 
+      y: this.cameras.main.height / 2 - size.height / 2
+    };
 
-    const progressBar = this.add.graphics();
+    this.loadingMiner = this.add.sprite(this.cameras.main.width / 2, center.y - 20, 'loading_miner').setScale(0.5);
 
-    const percentText = this.add.text(centerX, centerY, '0%', {
-      fontSize: '20px',
-      fill: '#ffffff',
-      fontFamily: 'Arial'
-    }).setOrigin(0.5);
-
-    // ✅ 로딩 진행 이벤트
-    this.load.on('progress', (value) => {
-      progressBar.clear();
-      progressBar.fillStyle(0xffffff, 1);
-      progressBar.fillRect(centerX - barWidth / 2, centerY - barHeight / 2, barWidth * value, barHeight);
-      percentText.setText(`${Math.floor(value * 100)}%`);
+    this.loadingMiner.anims.create({
+      key: 'loading_move',
+      frames: this.anims.generateFrameNumbers('loading_miner', { start: 0, end: 2 }),
+      frameRate: 10,
+      repeat: -1
     });
-  }
+    this.loadingMiner.play('loading_move');
+
+    const loadingBox = this.add.graphics();
+    loadingBox.fillStyle(0xffffff, 1);
+    loadingBox.fillRoundedRect(center.x, center.y, size.width, size.height, size.height / 2);
+    loadingBox.lineStyle(size.boxStroke, 0x94ccdc, 1); 
+    loadingBox.strokeRoundedRect(center.x, center.y, size.width, size.height, size.height / 2);
+
+    const loadingBar = this.add.graphics();
+
+    this.load.on('progress', (value) => {
+      loadingBar.clear();
+      loadingBar.fillStyle(0x94ccdc, 1);
+      const innerWidth = (size.width - 6) * value;
+      loadingBar.fillRoundedRect(center.x + 3, center.y + 3, Math.max(size.height - 6, innerWidth), size.height - 6, (size.height - 6) / 2);
+      loadingBar.lineStyle(size.barStroke, 0xffffff, 0.7);
+      loadingBar.strokeRoundedRect(center.x + 3, center.y + 3, Math.max(size.height - 6, innerWidth), size.height - 6, (size.height - 6) / 2);
+
+      this.loadingMiner.x = center.x +  Math.max(size.height - 6, innerWidth);
+    });
+  };
 }

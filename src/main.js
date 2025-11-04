@@ -20,7 +20,7 @@ export default class GoldMinerMain {
     type: Phaser.CANVAS,
     width: 1280,
     height: 720,
-    backgroundColor: '#562202',
+    backgroundColor: '#c9effa',
     scene: [
       Boot,
       PreloadScene,

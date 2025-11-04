@@ -7,6 +7,7 @@ export default class Boot extends Scene {
   
   preload() {
     this.load.image("logo", `images/icecandy_logo.png`);
+    this.load.spritesheet('loading_miner', './images/loading_miner.png', { frameWidth: 81, frameHeight: 67 });
   }
   
   create() {

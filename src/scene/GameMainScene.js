@@ -176,7 +176,7 @@ export default class MainScene extends Phaser.Scene {
     });
 
     const countText = this.add.text(xText + 10, yText , `${count}`, {
-      fontSize: '22px',
+      fontSize: '21px',
       color: '#fff',
       fontFamily: 'Cafe24Surround',
     });
