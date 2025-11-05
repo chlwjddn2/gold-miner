@@ -1,6 +1,6 @@
 class GameManager {
   constructor() {
-    this.score = 895;
+    this.score = 0;
     this.level = 1;
     this.targetScore = 650;
     this.bgmOn = true;

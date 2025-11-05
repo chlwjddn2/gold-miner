@@ -48,7 +48,7 @@ export default class MainScene extends Phaser.Scene {
     this.progressBar.update(GameManager.score, GameManager.targetScore);
     
     // timer 생성
-    this.timer = new TimerManager(this, 80, 120, 1, () => this.onTimerEnd());
+    this.timer = new TimerManager(this, 80, 120, 60, () => this.onTimerEnd());
     
     // 아이템 생성
     this.dynamite = this.setItems(405, 123, 'dynamite');
