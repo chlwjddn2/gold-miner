@@ -48,7 +48,7 @@ export default class MainScene extends Phaser.Scene {
     this.progressBar.update(GameManager.score, GameManager.targetScore);
     
     // timer 생성
-    this.timer = new TimerManager(this, 80, 120, 60, () => this.onTimerEnd());
+    this.timer = new TimerManager(this, 80, 120, 1, () => this.onTimerEnd());
     
     // 아이템 생성
     this.dynamite = this.setItems(405, 123, 'dynamite');
@@ -144,6 +144,8 @@ export default class MainScene extends Phaser.Scene {
     if (type === 'mole' || type === 'rock') AudioManager.play('wrongSound');
     if (type === 'gold' || type ==='diamond' || type === 'random') AudioManager.play('correctSound');
     if (type === 'bomb') this.explodeMineralArea();
+
+    if(!this.attachedObject) this.miner.playAnimation('cry');
   }
 
   shrinkEnd = () => { // 다 줄어들있을떄
@@ -252,11 +254,11 @@ export default class MainScene extends Phaser.Scene {
     AudioManager.stopAll();
 
     if (GameManager.score < GameManager.targetScore) {
-      this.scene.launch('GameOverScene');
+      this.scene.start('GameOverScene');
       AudioManager.play('lose');
     } else {
       if (GameManager.level === 10) this.scene.launch('GameFinishScene');
-      else this.scene.launch('LevelDoneScene');
+      else this.scene.start('LevelDoneScene');
       AudioManager.play('win');
     }
   }
