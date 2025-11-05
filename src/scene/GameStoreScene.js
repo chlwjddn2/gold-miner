@@ -6,7 +6,7 @@ export default class GameStoreScene extends Phaser.Scene {
     super('GameStoreScene');
   }
 
-  create() {
+  create = () => {
     this.storeBackground = this.add.image(0, 0, 'store_bg').setOrigin(0, 0); // 배경
     this.storeDynamite = this.add.image(330, 420, 'store_dynamite').setInteractive({ useHandCursor: true }).setScale(0.7);
     this.storePotion = this.add.image(545, 420, 'store_potion').setInteractive({ useHandCursor: true }).setScale(0.7);
@@ -15,7 +15,7 @@ export default class GameStoreScene extends Phaser.Scene {
     this.addEvent();
   }
 
-  addEvent() {
+  addEvent = () => { // 이벤트 등록
     this.storeDynamite.on('pointerdown', () => {
       this.disableItem(this.storeDynamite);
       gameEvents.emit('clickItem', { key: 'dynamite' });
@@ -42,8 +42,7 @@ export default class GameStoreScene extends Phaser.Scene {
     })
   }
 
-
-  disableItem = (item) => {
+  disableItem = (item) => { // 클릭 아이템 비활성화
     item.disableInteractive().setAlpha(0.5);
     this.input.setDefaultCursor('default'); 
   }

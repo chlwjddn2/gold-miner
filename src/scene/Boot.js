@@ -5,12 +5,12 @@ export default class Boot extends Scene {
     super('Boot');
   }
   
-  preload() {
-    this.load.image("logo", `images/icecandy_logo.png`);
-    this.load.spritesheet('loading_miner', './images/loading_miner.png', { frameWidth: 81, frameHeight: 67 });
+  preload = () => {
+    this.load.image('logo', `images/loading/icecandy_logo.png`);
+    this.load.spritesheet('loading_miner', './images/loading/loading_miner.png', { frameWidth: 81, frameHeight: 67 });
   }
   
-  create() {
+  create = () => {
     const { width, height } = this.scale;
 
     // 화면 전체를 덮는 배경

@@ -12,30 +12,29 @@ export default class Quiz {
     this.init();
   }
 
-  init = async () => {
-    this.quizData = await loadJson('./quizData/data.json');
-    
-    shuffleArray(this.quizData);
+  init = async () => { // 퀴즈 초기 설정
+    this.quizData = await loadJson('./quizData/data.json'); // 퀴즈 데이터 로드
+    shuffleArray(this.quizData); // 섞기
     this.reset();
     this.addEvent();
   }
 
-  addEvent = () => {
+  addEvent = () => { // 이벤트 등록
     this.quizList.forEach((list, index) => {
       list.addEventListener('click', () => this.clickItem(index));
     })
   }
 
-  setQuizItem = (key) => {
+  setQuizItem = (key) => { // 퀴즈 내용 생성
     const quizData = this.quizData[this.quizStep];
     this.key = key;
     this.quizText.innerHTML = this.quizData[this.quizStep].title;
-    this.quizImage.src = `./images/quiz/miner_store_${this.key}_char.png`;
+    this.quizImage.src = `./images/quiz/quiz_${this.key}.png`;
     this.quizList.forEach((list, index) => list.innerHTML = quizData.list[index]);
     this.isSolved = false;
   }
 
-  clickItem = (index) => {
+  clickItem = (index) => {  // 퀴즈 아이템 클릭
     if (this.isSolved) return;
     const quizData = this.quizData[this.quizStep];
     const answer = quizData.answer;
@@ -45,7 +44,7 @@ export default class Quiz {
     this.isSolved = true;
   }
 
-  reset = () => {
+  reset = () => { // 퀴즈 리셋
     this.quizStep = 0;
     this.key = '';
     this.isSolved = false;

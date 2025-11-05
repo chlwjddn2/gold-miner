@@ -72,7 +72,7 @@ export default class GoldMinerMain {
     this.resizeContent();
   }
 
-  addEvent = () => {
+  addEvent = () => { // 이벤트 추가
     // 팝업 이벤트
     gameEvents.on('howto', () => this.clickHowto());
     // 상점 아이템 클릭 이벤트
@@ -124,27 +124,27 @@ export default class GoldMinerMain {
     }
   }
 
-  clickItem = (key) => {
+  clickItem = (key) => { // 상점 아이템 클릭 했을때 
     AudioManager.play('clickSound');
     this.showQuizPopup(true);
     this.quiz.setQuizItem(key);
   }
 
-  clickHowto = () => {
+  clickHowto = () => { // 게임 방법 버튼 클릭했을때
     AudioManager.play('clickSound');
     this.showHowToPopup(true);
   }
 
-  clickHowToClose = () => {
+  clickHowToClose = () => { // 게임 방법 닫기 버튼
     AudioManager.play('clickSound');
     this.showHowToPopup(false);
   }
 
-  quizFinish = (event) => {
+  quizFinish = (event) => { // 퀴즈 완료 후
     const { result, key } = event;
     if (result) {
       AudioManager.play('correctSound');
-      key === 'dynamite' ? GameManager.addDynamite() : GameManager.addPotion();;
+      key === 'dynamite' ? GameManager.addDynamite() : GameManager.addPotion();
     } else {
       AudioManager.play('wrongSound');
     }

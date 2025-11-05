@@ -21,7 +21,7 @@ export default class Timer {
     });
   }
 
-  updateTimer() {
+  updateTimer = () => {
     this.remainingTime--;
     this.timerText.setText(`${this.remainingTime}`);
 

@@ -14,7 +14,7 @@ export default class ProgressBar {
     // 채워지는 부분
     this.bar = scene.add.graphics();
 
-    this.scoreBox = scene.add.image(962, 51, 'miner_balloon').setDepth(10);
+    this.scoreBox = scene.add.image(962, 51, 'balloon').setDepth(10);
     this.scroeText = scene.add.text(962, 46, '', {
       fontSize: '28px',
       color: '#000',
@@ -22,7 +22,7 @@ export default class ProgressBar {
       fontStyle: 'bold'
     }).setOrigin(0.5).setDepth(15);
     
-    this.targetScoreBox = scene.add.image(1200, 80, 'miner_trophi_box');
+    this.targetScoreBox = scene.add.image(1200, 80, 'trophi_box');
     this.targetScoreText = scene.add.text(1215, 107, '', {
       fontSize: '28px',
       color: '#000',
@@ -30,10 +30,10 @@ export default class ProgressBar {
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    this.coinIcon = scene.add.image(965, 104, 'miner_icon_coin').setOrigin(0.5);
+    this.coinIcon = scene.add.image(965, 104, 'icon_coin').setOrigin(0.5);
   }
 
-  update(current, target) {
+  update = (current, target) => {
     this.progress = Phaser.Math.Clamp(current / target, 0, 1);
 
     if (this.progress > 0) {
@@ -46,14 +46,14 @@ export default class ProgressBar {
     this.targetScoreText.setText(`${target}`);
     const barWidth = this.width * this.progress;
 
-    
-    this.coinIcon.setX(this.x + barWidth); // bar 끝 위치
-    this.scoreBox.setX(this.x + barWidth); // bar 끝 위치
-    this.scroeText.setX(this.x + barWidth); // bar 끝 위치
+    this.scoreBox.setX(this.x + barWidth); 
+    this.scroeText.setX(this.x + barWidth);
+
+    this.coinIcon.setX(this.x + barWidth); 
     this.coinIcon.setY(this.y + this.height / 2); // 높이는 바 중앙
   }
 
-  destroy() {
+  destroy = () => {
     this.bg.destroy();
     this.bar.destroy();
     this.text.destroy();

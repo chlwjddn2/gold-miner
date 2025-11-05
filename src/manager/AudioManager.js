@@ -5,53 +5,53 @@ class AudioManager {
   }
 
   // Scene 등록 (필수: sound 시스템 접근용)
-  registerScene(scene) {
+  registerScene = (scene) => {
     this.scene = scene;
   }
 
   // 오디오 로드 및 인스턴스 생성
-  add(key, config = {}) {
+  add = (key, config = {}) => {
     if (!this.scene) throw new Error('Scene not registered');
     if (!this.sounds[key]) this.sounds[key] = this.scene.sound.add(key, config);
     return this.sounds[key];
   }
 
-  play(key, onComplete = null) {
+  play = (key, onComplete = null) => {
     const sound = this.sounds[key] || this.add(key);
     if (sound) sound.play();
     if (typeof onComplete === 'function') sound.once('complete', onComplete);
   }
 
-  pause(key) {
+  pause = (key) => {
     const sound = this.sounds[key];
     if (sound && sound.isPlaying) sound.pause();
   }
 
-  resume(key) {
+  resume = (key) => {
     const sound = this.sounds[key];
     if (sound && sound.isPaused) sound.resume();
   }
 
-  stop(key) {
+  stop = (key) => {
     const sound = this.sounds[key];
     if (sound) sound.stop();
   }
 
-  setVolume(key, volume) {
+  setVolume = (key, volume) => {
     const sound = this.sounds[key];
     if (sound) sound.setVolume(volume);
   }
 
   // 전체 오디오 제어
-  pauseAll() {
+  pauseAll = () => {
     Object.values(this.sounds).forEach(sound => sound.isPlaying && sound.pause());
   }
 
-  resumeAll() {
+  resumeAll = () => {
     Object.values(this.sounds).forEach(sound => sound.isPaused && sound.resume());
   }
   
-  stopAll() {
+  stopAll = () => {
     Object.values(this.sounds).forEach(sound => sound.stop());
   }
 }

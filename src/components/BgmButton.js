@@ -17,7 +17,7 @@ export default class BgmButton{
     this.button.on('pointerout', () => this.button.setScale(0.9));
   }
 
-  clickBgmButton() {
+  clickBgmButton = () => {
     GameManager.toggleBgm();
     this.button.setFrame(GameManager.bgmOn ? 0 : 1);
   }

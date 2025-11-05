@@ -154,7 +154,7 @@ button {
 .howto-inner {
   width: 1232px;
   height: 617px;
-  background-image: url(../public/images/miner_description_bg.png);
+  background-image: url(../public/images/intro/intro_howto_bg.png);
   color: #fff;
   font-family: 'Cafe24Surround';
   padding: 4rem 0;
@@ -204,7 +204,7 @@ button {
   left: 80px;
   width: 372px;
   height: 108px;
-  background-image: url(../public/images/miner_bubbld1.png);
+  background-image: url(../public/images/intro/intro_bubbld1.png);
   padding: 0.3rem 1.5rem 0 0.6rem;
 }
 
@@ -213,7 +213,7 @@ button {
   left: 652px;
   width: 506px;
   height: 94px;
-  background-image: url(../public/images/miner_bubbld2.png);
+  background-image: url(../public/images/intro/intro_bubbld2.png);
   padding: 0.3rem 1rem 0 2.5rem;
 }
 
@@ -222,7 +222,7 @@ button {
   left: 622px;
   width: 484px;
   height: 93px;
-  background-image: url(../public/images/miner_bubbld3.png);
+  background-image: url(../public/images/intro/intro_bubbld3.png);
   padding: 0.3rem 1rem 0 1rem;
 }
 
@@ -279,11 +279,11 @@ button {
 }
 
 [class*="howto-bubble"] .dynamite {
-  background-image: url(../public/images/dynamite_icon.png);
+  background-image: url(../public/images/intro/intro_dynamite.png);
 }
 
 [class*="howto-bubble"] .potion {
-  background-image: url(../public/images/potion_icon.png);
+  background-image: url(../public/images/intro/intro_potion.png);
 }
 
 [class*="howto-bubble"] p {
@@ -312,7 +312,7 @@ button {
 .quiz-inner {
   width: 1090px;
   height: 642px;
-  background-image: url(../public/images/quiz/miner_quiz_bg.png);
+  background-image: url(../public/images/quiz/quiz_bg.png);
   padding: 5rem 7rem;
   align-items: initial;
 }
@@ -343,9 +343,9 @@ button {
 .quiz-bottom ul li button{
   width: 258px;
   height: 112px;
-  background: url(../public/images/quiz/miner_quiz_button.png) no-repeat center / contain;
+  background: url(../public/images/quiz/quiz_button.png) no-repeat center / contain;
   font-size: 2.5rem;
-  font-family: 'GMarketSans';
+  font-family: 'GMarketSans'; 
   text-align: center;
   color: #351401;
   display: flex;

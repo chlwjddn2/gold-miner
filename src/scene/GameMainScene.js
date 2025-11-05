@@ -17,7 +17,7 @@ export default class MainScene extends Phaser.Scene {
   get isHeavy() { return this.miner.shrinkSpeed < 350; }
   get isLight() { return this.miner.shrinkSpeed >= 350; }
 
-  create() {
+  create = () => {
     this.width = this.cameras.main.width; 
     this.height = this.cameras.main.height;
     this.attachedObject = null;
@@ -58,17 +58,18 @@ export default class MainScene extends Phaser.Scene {
     this.addEvent(); // 이벤트 등록
   }
 
-  update(_, delta) {
-    if (this.gameOver || this.powering) return;
+  update = (_, delta) => {
+    if (this.gameOver || this.powering) return;  // 게임 오버이거나 파워업 중이면 update 멈춤
 
     const { clamp, isExpand, isShrink, lineLength } = this.miner;
     const isClampOutOfBounds = clamp.x > this.width || clamp.x < 0 || clamp.y > this.height; // 화면 밖으로 나갔는지 판단
 
-    this.miner.update(delta);
+    this.miner.update(delta); // 줄 상태 업데이트
 
-    if (isClampOutOfBounds && isExpand) this.miner.shrinkStart();
-    if (isShrink && lineLength <= 100) this.miner.shrinkEnd();
-    if (this.attachedObject) this.pullAttachedObject();
+    if ((isClampOutOfBounds || this.attachedObject) && isExpand) this.miner.shrinkStart(); // 늘어나는 중에 화면 밖으로 나가거나 물체를 잡으면 줄어들기
+    
+    if (isShrink && lineLength <= 100) this.miner.shrinkEnd(); // 줄어들기 중에 100 이하이면 줄어들기 완료
+    if (this.attachedObject) this.pullAttachedObject(); // 잡은 물체가 있으면 당겨오기
     
     // bgm 설정
     if (GameManager.bgmOn && this.bgm.isPaused) this.bgm.resume();
@@ -76,33 +77,34 @@ export default class MainScene extends Phaser.Scene {
     if (!GameManager.bgmOn && this.bgm.isPlaying) this.bgm.pause();
   }
 
-  addEvent = () => {
-    this.background.on('pointerdown', () => this.miner.expandStart());
-    this.matter.world.on('collisionstart', (event) => this.collision(event));
+  addEvent = () => { // 이벤트 등록 함수
+    this.background.on('pointerdown', () => this.miner.expandStart()); // 배경 클릭시 늘어나기 시작
+    this.matter.world.on('collisionstart', (event) => this.collision(event)); // 충돌 설정
     
-    this.dynamite.sprite.on('pointerdown', () => this.useDynamite());
+    // 아이템 사용 이벤트
+    this.dynamite.sprite.on('pointerdown', () => this.useDynamite()); 
     this.potion.sprite.on('pointerdown', () => this.usePotion());
 
+    // 커스텀 이벤트 중복 방지 
     this.removeCustomEvents();
 
+    // 커스텀 이벤트 등록
     gameEvents.on('expandStart', () => this.expandStart());
     gameEvents.on('shrinkStart', () => this.shrinkStart());
     gameEvents.on('shrinkEnd', () => this.shrinkEnd());
   }
 
-  removeCustomEvents = () => {
+  removeCustomEvents = () => { // 커스텀 이벤트 중복 방지 함수
     gameEvents.off('expandStart');
     gameEvents.off('shrinkStart');
     gameEvents.off('shrinkEnd');
   }
 
-  collision = (event) => { // 충돌!
+  collision = (event) => { // 충돌
     const {bodyA, bodyB} = event.pairs[0];
-
     if (bodyA.gameObject.name === bodyB.gameObject.name) return;
     this.matter.world.remove(bodyB);
     this.attachedObject = bodyB.gameObject;
-    this.miner.shrinkStart();
   }
 
   pullAttachedObject = () => { // 충들 물체 당겨오는 함수
@@ -129,7 +131,6 @@ export default class MainScene extends Phaser.Scene {
       const speed = this.attachedObject ? this.attachedObject.weight : 0;
       this.miner.adjustSpeed(speed);
     }
-    
 
     // 속도에 따라 애니메이션 설정
     this.setAnimation();    
@@ -158,7 +159,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.attachedObject) this.updateScore();
   }
 
-  setItems = (x, y, type) => {
+  setItems = (x, y, type) => { // 아이템 설정
     const sprite = this.add.image(x, y, type).setInteractive({ useHandCursor: true });
 
     const offsetX = type  === 'dynamite' ? sprite.displayWidth / 2 - 35 : sprite.displayWidth / 2 - 31;
@@ -183,13 +184,13 @@ export default class MainScene extends Phaser.Scene {
     return {sprite, countText};
   }
 
-  explodeMineral = () => {
+  explodeMineral = () => { // 아이템 폭발
     this.attachedObject.explode();
     this.attachedObject = null;
     this.miner.adjustSpeed(0);
   }
 
-  explodeMineralArea = () => {
+  explodeMineralArea = () => { // 아이템 범위 폭발
     const explosionRadius = 150; // 폭발 범위 반경 
     const bombX = this.attachedObject.x; 
     const bombY = this.attachedObject.y;
@@ -218,7 +219,7 @@ export default class MainScene extends Phaser.Scene {
     this.miner.playAnimation('cry');
   }
 
-  useDynamite = () => {
+  useDynamite = () => { // 다이너마이트 사용 함수
     if (GameManager.dynamite <= 0) return;
 
     GameManager.dynamite--;
@@ -226,7 +227,7 @@ export default class MainScene extends Phaser.Scene {
     this.explodeMineral();
   }
 
-  usePotion = () => {
+  usePotion = () => { // 포션 사용 함수
     if (GameManager.potion <= 0) return;
     this.powering = true;
     GameManager.usePotion();
@@ -243,7 +244,7 @@ export default class MainScene extends Phaser.Scene {
     });
   }
 
-  onTimerEnd() { // 타이머 끝난 후
+  onTimerEnd = () => { // 타이머 끝난 후
     this.gameOver = true;
     this.scene.pause();        
     AudioManager.stopAll();
@@ -258,7 +259,7 @@ export default class MainScene extends Phaser.Scene {
     }
   }
 
-  updateScore = () => {
+  updateScore = () => { // 점수 업데이트
     GameManager.updateScore(this.attachedObject.price);
     this.progressBar.update(GameManager.score, GameManager.targetScore);
     this.attachedObject.tween?.stop();
@@ -267,13 +268,13 @@ export default class MainScene extends Phaser.Scene {
     AudioManager.play('moneySound');
   }
 
-  setAnimation = () => {
+  setAnimation = () => { // 애니메이션 설정 함수
     if (this.isHeavy) this.miner.playAnimation('hard');
     if (this.isLight) this.miner.playAnimation('mining');
     if (this.potionUseCount > 0) this.miner.playAnimation('power');
   }
 
-  resetAnimation = () => {
+  resetAnimation = () => { // 애니메이션 리셋
     this.miner.stopAmimation();
     if (this.potionUseCount > 0) this.miner.setTexture('miner_power');
     else this.miner.setTexture('miner_idle');

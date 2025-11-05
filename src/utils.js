@@ -41,3 +41,23 @@ export async function playSoundEffect(src, volume = 1.0) {
     console.warn('사운드 재생 실패:', e);
   }
 }
+
+/**
+ * 씬에 텍스트 생성
+ *
+ * @param {Phaser.Scene} scene - 텍스트를 추가할 Phaser 씬
+ * @param {number} x - 텍스트의 x 좌표
+ * @param {number} y - 텍스트의 y 좌표
+ * @param {string} content - 표시할 텍스트 내용
+ * @param {number} fontSize - 글자 크기 (px 단위)
+ * @param {string} [color='#fff'] - 글자 색상 (기본값: 흰색)
+ * @returns {Phaser.GameObjects.Text} 생성된 텍스트 객체
+ */
+export function createText(scene, x, y, content, fontSize, color = '#fff') {
+  return scene.add.text(x, y, content, {
+    fontSize: `${fontSize}px`,
+    fontFamily: 'Cafe24Surround',
+    color,
+    fontStyle: 'bold',
+  }).setOrigin(0.5);
+}
