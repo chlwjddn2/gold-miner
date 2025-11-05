@@ -1,5 +1,4 @@
 import AudioManager from "../manager/AudioManager";
-import GameManager from "../manager/GameManager.js";
 import { gameEvents } from "../manager/EventManager.js";
 
 export default class Miner {
@@ -119,7 +118,6 @@ export default class Miner {
   shrinkEnd = () => { // rope 줄어들기
     this.isShrink = false;
     this.lineLength = 100;
-    
     gameEvents.emit('shrinkEnd');
   }
 

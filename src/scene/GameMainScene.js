@@ -105,6 +105,7 @@ export default class MainScene extends Phaser.Scene {
     if (bodyA.gameObject.name === bodyB.gameObject.name) return;
     this.matter.world.remove(bodyB);
     this.attachedObject = bodyB.gameObject;
+    this.miner.clamp.setFrame(0);
   }
 
   pullAttachedObject = () => { // 충들 물체 당겨오는 함수
@@ -157,6 +158,7 @@ export default class MainScene extends Phaser.Scene {
     this.resetAnimation();
     // 점수 업데이트
     if (this.attachedObject) this.updateScore();
+    this.miner.clamp.setFrame(1);
   }
 
   setItems = (x, y, type) => { // 아이템 설정
