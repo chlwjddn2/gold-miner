@@ -5,11 +5,8 @@ import MapManager from '../manager/MapManager.js';
 import BgmButton from '../ui/BgmButton.js';
 import ProgressBar from '../ui/ProgressBar.js';
 import TimerManager from '../ui/Timer.js';
-
 import { createText } from '../utils.js';
-
 import Miner from '../objects/Miner.js';
-
 
 export default class MainScene extends Phaser.Scene {
   constructor() {

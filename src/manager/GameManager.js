@@ -9,9 +9,7 @@ class GameManager {
     this.timeRate = 60;
   }
 
-  get isPower() { return this.potionUseCount > 0; }
-
-  updateScore(amount) {
+  updateScore = (amount) => {
     this.score += amount;
   }
 
@@ -19,28 +17,28 @@ class GameManager {
     this.potion++;
   }
 
-  usePotion() {
+  usePotion = () => {
     this.potion--;
   }
 
-  addDynamite() {
+  addDynamite = () => {
     this.dynamite++;
   }
   
-  useDynamite() {
+  useDynamite = () => {
     this.dynamite--;
   }
 
-  levelUp() {
+  levelUp = () => {
     this.level += 1;
     this.targetScore = (135 * this.level * this.level) + (135 * this.level) + 380;
   }
 
-  toggleBgm() {
+  toggleBgm = () => {
     this.bgmOn = !this.bgmOn;
   }
 
-  reset() {
+  reset = () => {
     this.score = 0;
     this.level = 1;
     this.targetScore = 650;
