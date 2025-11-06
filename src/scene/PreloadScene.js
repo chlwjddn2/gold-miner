@@ -6,12 +6,6 @@ export default class PreloadScene extends Phaser.Scene {
   }
 
   preload = () => {
-    //background
-    
-    
-    
-    this.load.image('finish_bg', './images/finish/miner_finish_bg.png');
-
     // game over scene
     this.load.image('game_over_bg', './images/game_over/game_over_bg.png');
     this.load.image('game_over_text', './images/game_over/game_over_text.png');
@@ -34,6 +28,7 @@ export default class PreloadScene extends Phaser.Scene {
     
     this.load.spritesheet('explosion', './images/main/main_explosion.png', { frameWidth: 96, frameHeight: 96 });
     this.load.spritesheet('minerals', './images/main/main_mineral.png', { frameWidth: 532, frameHeight: 532 });
+    this.load.spritesheet('mole', './images/main/main_mole_sprites.png', { frameWidth: 532, frameHeight: 532 });
 
     // store scene
     this.load.image('store_bg', './images/store/store_bg.png');   
@@ -45,6 +40,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('intro_title', './images/intro/intro_title.png');
 
     // finish scene
+    this.load.image('finish_bg', './images/finish/miner_finish_bg.png');
     this.load.image('complete', './images/finish/miner_complete.png');
     this.load.image('miner_score_box', './images/finish/miner_score_box.png')
     

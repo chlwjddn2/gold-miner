@@ -6,6 +6,8 @@ import BgmButton from '../ui/BgmButton.js';
 import ProgressBar from '../ui/ProgressBar.js';
 import TimerManager from '../ui/Timer.js';
 
+import { createText } from '../utils.js';
+
 import Miner from '../objects/Miner.js';
 
 
@@ -48,7 +50,7 @@ export default class MainScene extends Phaser.Scene {
     this.progressBar.update(GameManager.score, GameManager.targetScore);
     
     // timer 생성
-    this.timer = new TimerManager(this, 80, 120, 60, () => this.onTimerEnd());
+    this.timer = new TimerManager(this, 80, 120, GameManager.timeRate, () => this.onTimerEnd());
     
     // 아이템 생성
     this.dynamite = this.setItems(405, 123, 'dynamite');
@@ -135,9 +137,13 @@ export default class MainScene extends Phaser.Scene {
 
     // 속도에 따라 애니메이션 설정
     this.setAnimation();    
+    console.log('attachedObject', );
     
     // mole animation 종료
-    this.moles.forEach((mole) => mole.tween?.pause());
+    this.moles?.forEach((mole) => {
+      if (this.attachedObject !== mole) mole.anims?.pause();
+      mole.tween?.pause();
+    });
 
     // 타입에 따라 설정
     const type = this.attachedObject?.type;
@@ -153,7 +159,8 @@ export default class MainScene extends Phaser.Scene {
     this.clamp.body.collisionFilter.mask = 0x0001;
     // mole 애니메이션 시작
     this.moles?.forEach((mole) => {
-      if (mole.body && mole.tween?.paused) mole.tween.resume();
+      mole.tween?.resume();
+      mole.anims?.resume();
     });
     if (this.potionUseCount > 0) this.potionUseCount--;
     // 광부 애니메이션 종료
@@ -263,11 +270,27 @@ export default class MainScene extends Phaser.Scene {
 
   updateScore = () => { // 점수 업데이트
     GameManager.updateScore(this.attachedObject.price);
+    this.createScoreText();
     this.progressBar.update(GameManager.score, GameManager.targetScore);
     this.attachedObject.tween?.stop();
     this.attachedObject.destroy();
     this.attachedObject = null;
     AudioManager.play('moneySound');
+  }
+
+  createScoreText = () => {
+    this.scoreText = createText(this, 550, 100, `+${this.attachedObject.price}`, 32);
+
+    this.tweens.add({
+      targets: this.scoreText,
+      y: this.scoreText.y - 50,
+      alpha: 0,
+      duration: 1000,
+      ease: 'Power1',
+      onComplete: () => {
+        this.scoreText.destroy();
+      }
+    })
   }
 
   setAnimation = () => { // 애니메이션 설정 함수

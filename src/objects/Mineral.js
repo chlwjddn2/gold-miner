@@ -2,7 +2,10 @@ import AudioManager from "../manager/AudioManager";
 
 export default class Mineral extends Phaser.Physics.Matter.Sprite {
   constructor(scene, data) {
-    super(scene.matter.world, data.x, data.y, 'minerals', data.gid);
+    const textureKey = data.type === 'mole' ? 'mole' : 'minerals';
+    const frame = data.type === 'mole' ? 0 : data.gid;
+
+    super(scene.matter.world, data.x, data.y, textureKey, frame);
     
     this.scene = scene;
     this.price = data.price;
@@ -19,7 +22,10 @@ export default class Mineral extends Phaser.Physics.Matter.Sprite {
     this.setDisplaySize( this.dataList.width,  this.dataList.height);
     this.createAnimation();
 
-    if (this.type === 'mole') this.makeMole(this, this.dataList.x, this.dataList.y)
+    if (this.type === 'mole') {
+       this.setTexture('mole'); // 🔁 두더지 전용 이미지로 교체
+      this.makeMole(this, this.dataList.x, this.dataList.y)
+    }
   }
 
   explode = () => {
@@ -34,24 +40,35 @@ export default class Mineral extends Phaser.Physics.Matter.Sprite {
 
   createAnimation = () => {
     const anims = this.scene.anims;
-    if (anims.get('explosion')) return;
-    
-    anims.create({
-      key: 'explosion',
-      frames: anims.generateFrameNumbers('explosion', { start: 0, end: 11 }),
-      frameRate: 10,
-    });
+
+    if (!anims.get('explosion')) {
+      anims.create({
+        key: 'explosion',
+        frames: anims.generateFrameNumbers('explosion', { start: 0, end: 11 }),
+        frameRate: 10,
+      });
+    }
+
+    if (!anims.get('mole_move')) {
+      anims.create({
+        key: 'mole_move',
+        frames: anims.generateFrameNumbers('mole', { start: 0, end: 29 }),
+        frameRate: 80,
+        repeat: -1
+      });
+    }
   }
 
   makeMole = (mole, x) => {
     mole.setSensor(true); //물리 설정 끄기
     mole.setScale(0.25);
+    mole.play('mole_move');
     const sceneWidth = this.scene.cameras.main.width;
     const moveDistance = Phaser.Math.Between(100, 300);
     const duration = Phaser.Math.Between(2000, 3000);
     const direction = x > sceneWidth / 2 ? -1 : 1;
     
-    if (x > sceneWidth / 2) { // 중간보다 오른쪽이면 filp
+    if (x < sceneWidth / 2) { // 중간보다 오른쪽이면 filp
       mole.toggleFlipX();
       this.scene.matter.body.scale(mole.body, -1, 1, { x: mole.x, y: mole.y });
     }
