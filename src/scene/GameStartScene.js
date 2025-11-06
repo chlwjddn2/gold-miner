@@ -1,6 +1,6 @@
 import { gameEvents } from '../manager/EventManager.js';
 import AudioManager from '../manager/AudioManager.js';
-import BgmButton from '../components/BgmButton.js';
+import BgmButton from '../ui/BgmButton.js';
 
 export default class GameStartScene extends Phaser.Scene {
   constructor() {

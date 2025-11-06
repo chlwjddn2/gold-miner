@@ -1,12 +1,12 @@
 import { gameEvents } from '../manager/EventManager.js';
 import GameManager from '../manager/GameManager.js';
 import AudioManager from "../manager/AudioManager";
-import BgmButton from '../components/BgmButton.js';
-import ProgressBar from '../components/ProgressBar.js';
 import MapManager from '../manager/MapManager.js';
-import TimerManager from '../manager/TimerManaer.js';
+import BgmButton from '../ui/BgmButton.js';
+import ProgressBar from '../ui/ProgressBar.js';
+import TimerManager from '../ui/Timer.js';
 
-import Miner from '../entities/Miner.js';
+import Miner from '../objects/Miner.js';
 
 
 export default class MainScene extends Phaser.Scene {
@@ -250,14 +250,12 @@ export default class MainScene extends Phaser.Scene {
 
   onTimerEnd = () => { // 타이머 끝난 후
     this.gameOver = true;
-    this.scene.pause();        
     AudioManager.stopAll();
-
     if (GameManager.score < GameManager.targetScore) {
       this.scene.start('GameOverScene');
       AudioManager.play('lose');
     } else {
-      if (GameManager.level === 10) this.scene.launch('GameFinishScene');
+      if (GameManager.level === 10) this.scene.start('GameFinishScene');
       else this.scene.start('LevelDoneScene');
       AudioManager.play('win');
     }

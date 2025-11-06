@@ -34,6 +34,7 @@ export default class LevelDoneScene extends Phaser.Scene {
 
     this.storeButton.on('pointerdown', () => {
       AudioManager.play('clickSound');
+      this.scene.stop('GameStoreScene');
       this.scene.start('GameStoreScene');
     })
 

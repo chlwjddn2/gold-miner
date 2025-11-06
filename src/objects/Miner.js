@@ -1,4 +1,4 @@
-import AudioManager from "../manager/AudioManager";
+import AudioManager from "../manager/AudioManager.js";
 import { gameEvents } from "../manager/EventManager.js";
 
 export default class Miner {
@@ -31,7 +31,7 @@ export default class Miner {
     // rope 이미지 설정
     this.rope = this.scene.add.image(614, 140, 'rope')
       .setOrigin(0.5, 0)
-      .setScale(1, this.lineLength / 100)
+      .setScale(0.5, this.lineLength / 100)
       .setDepth(10);
 
     // 집게 생성

@@ -24,9 +24,9 @@ export default class GoldMinerMain {
     scene: [
       Boot,
       PreloadScene,
-      GameStoreScene,
-      GameMainScene,
       GameStartScene,
+      GameMainScene,
+      GameStoreScene,
       LevelDoneScene,
       GameOverScene,
       GameFinishScene

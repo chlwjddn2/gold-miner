@@ -28,7 +28,7 @@ class AudioManager {
   }
 
   resume = (key) => {
-    const sound = this.sounds[key];
+    const sound = this.sounds[key];z
     if (sound && sound.isPaused) sound.resume();
   }
 

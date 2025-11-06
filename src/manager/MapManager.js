@@ -1,4 +1,4 @@
-import Mineral from "../entities/Mineral";
+import Mineral from "../objects/Mineral";
 
 export default class MapManager {
   constructor(scene) {
