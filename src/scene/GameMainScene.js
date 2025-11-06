@@ -134,7 +134,6 @@ export default class MainScene extends Phaser.Scene {
 
     // 속도에 따라 애니메이션 설정
     this.setAnimation();    
-    console.log('attachedObject', );
     
     // mole animation 종료
     this.moles?.forEach((mole) => {
@@ -156,6 +155,7 @@ export default class MainScene extends Phaser.Scene {
     this.clamp.body.collisionFilter.mask = 0x0001;
     // mole 애니메이션 시작
     this.moles?.forEach((mole) => {
+      if (!mole.active) return;
       mole.tween?.resume();
       mole.anims?.resume();
     });
