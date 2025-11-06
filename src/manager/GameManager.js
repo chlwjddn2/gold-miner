@@ -1,12 +1,12 @@
 class GameManager {
   constructor() {
     this.score = 0;
-    this.level = 4;
+    this.level = 1;
     this.targetScore = 650;
     this.bgmOn = true;
     this.dynamite = 0;
     this.potion = 0;
-    this.timeRate = 6000;
+    this.timeRate = 60;
   }
 
   get isPower() { return this.potionUseCount > 0; }
