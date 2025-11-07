@@ -54,7 +54,6 @@ export default class GoldMinerMain {
     // 게임 방법 팝업
     this.howToContainer = document.querySelector(`.howto-container`);
     this.howToCloseButton = this.howToContainer.querySelector(`.closeButton`);
-    this.logoContainer = document.querySelector('.logo-container');
     this.gameContainer = document.querySelector('.game-container');
 
     // 퀴즈
@@ -67,7 +66,6 @@ export default class GoldMinerMain {
   init = () => {
     this.quiz = new Quiz();
     this.game = new Phaser.Game(this.#config);
-    this.logoContainer.classList.remove('show');
     this.addEvent();
     this.resizeContent();
   }

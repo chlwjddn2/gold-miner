@@ -70,20 +70,6 @@ button {
 }
 
 @font-face {
-  font-family: 'SchoolSafetyRoundedSmile';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-5@1.0/HakgyoansimDunggeunmisoTTF-R.woff2') format('woff2');
-  font-weight: normal;
-  font-display: swap;
-}
-
-/* @font-face {
-  font-family: 'Cafe24Surround';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
-  font-weight: normal;
-  font-display: swap;
-} */
-
-@font-face {
   font-family: 'Cafe24Surround';
   src: url('../public/fonts/Cafe24Ssurround-v2.0.woff') format('woff');
   font-weight: normal;
@@ -92,14 +78,14 @@ button {
 
 @font-face {
   font-family: 'Waguri';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2403@1.0/WAGURITTF.woff2') format('woff2');
+  src: url('../public/fonts/WAGURITTF.woff2') format('woff2');
   font-weight: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: 'GMarketSans';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+  src: url('../public/fonts/GmarketSansBold.woff') format('woff');
   font-weight: 700;
   font-display: swap;
 }
