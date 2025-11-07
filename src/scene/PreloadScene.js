@@ -87,7 +87,13 @@ export default class PreloadScene extends Phaser.Scene {
     this.loading();
   }
 
-  create = () =>{
+  create = async () =>{
+    const fontsToLoad = [
+      document.fonts.load('16px "Cafe24Surround"'),
+    ];
+
+    await Promise.all(fontsToLoad);
+    await document.fonts.ready; // 
     // audio manager에 음원 등록
     AudioManager.registerScene(this);
     AudioManager.add('bgmSound', { volume: 0.1 });
