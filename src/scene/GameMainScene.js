@@ -20,10 +20,8 @@ export default class MainScene extends Phaser.Scene {
     this.width = this.cameras.main.width; 
     this.height = this.cameras.main.height;
     this.attachedObject = null;
-    this.gameOver = false;
 
     // 포션 아이템 상태
-    this.powering = false;
     this.potionUseCount = 0;
 
     this.bgm = this.sound.get('bgmSound');
@@ -58,11 +56,12 @@ export default class MainScene extends Phaser.Scene {
   }
 
   update = (_, delta) => {
-    if (this.gameOver || this.powering) return;  // 게임 오버이거나 파워업 중이면 update 멈춤
-
-    const { clamp, isExpand, isShrink, lineLength } = this.miner;
+    
+    const {miner, clamp, isExpand, isShrink, lineLength } = this.miner;
     const isClampOutOfBounds = clamp.x > this.width || clamp.x < 0 || clamp.y > this.height; // 화면 밖으로 나갔는지 판단
-
+    
+    if (miner.texture.key === 'miner_powerup') return;
+    
     this.miner.update(delta); // 줄 상태 업데이트
 
     if ((isClampOutOfBounds || this.attachedObject) && isExpand) this.miner.shrinkStart(); // 늘어나는 중에 화면 밖으로 나가거나 물체를 잡으면 줄어들기
@@ -88,20 +87,18 @@ export default class MainScene extends Phaser.Scene {
     this.removeCustomEvents();
 
     // 커스텀 이벤트 등록
-    gameEvents.on('expandStart', () => this.expandStart());
     gameEvents.on('shrinkStart', () => this.shrinkStart());
     gameEvents.on('shrinkEnd', () => this.shrinkEnd());
   }
 
   removeCustomEvents = () => { // 커스텀 이벤트 중복 방지 함수
-    gameEvents.off('expandStart');
     gameEvents.off('shrinkStart');
     gameEvents.off('shrinkEnd');
   }
 
   collision = (event) => { // 충돌
     const {bodyA, bodyB} = event.pairs[0];
-    if (bodyA.gameObject.name === bodyB.gameObject.name) return;
+    if (bodyA.gameObject.name === bodyB.gameObject.name) return; // 광물끼리 충돌 방지
     this.matter.world.remove(bodyB);
     this.attachedObject = bodyB.gameObject;
     this.miner.clamp.setFrame(0);
@@ -109,17 +106,13 @@ export default class MainScene extends Phaser.Scene {
 
   pullAttachedObject = () => { // 충들 물체 당겨오는 함수
     const {rope, angle} = this.miner;
-    const clampOffset = 25;
+    const clampOffset = 25; // 집는 위치 오프셋
     const clampX = rope.x + - Math.sin(angle) * (rope.displayHeight + clampOffset);
     const clampY = rope.y + Math.cos(angle) * (rope.displayHeight + clampOffset);
 
     this.attachedObject.setDepth(20);
     this.attachedObject.setRotation(angle);
     this.attachedObject.setPosition(clampX, clampY);
-  }
-
-  expandStart = () => {
-    console.log('늘어나기 시작!!');
   }
 
   shrinkStart = () => { // 줄어들기 시작
@@ -203,15 +196,15 @@ export default class MainScene extends Phaser.Scene {
     const bombX = this.attachedObject.x; 
     const bombY = this.attachedObject.y;
 
-    this.explodeMineral();
+    this.explodeMineral(); // 아이템 폭발
 
-    const nearbyMinerals = this.minerals.filter((mineral) => {
+    const nearbyMinerals = this.minerals.filter((mineral) => { // 근처 광물 
       if (!mineral.active || !mineral.body) return false;
       const dx = mineral.x - bombX;
       const dy = mineral.y - bombY;
       const distance = Math.sqrt(dx * dx + dy * dy);
       return distance < explosionRadius;
-    });
+    }); 
 
     nearbyMinerals.forEach((mineral, index) => {
       this.time.addEvent({
@@ -237,23 +230,19 @@ export default class MainScene extends Phaser.Scene {
 
   usePotion = () => { // 포션 사용 함수
     if (GameManager.potion <= 0) return;
-    this.powering = true;
     GameManager.usePotion();
     this.potion.countText.setText(`${GameManager.potion}`);
     this.miner.adjustSpeed(-50);
     this.resetAnimation();
     this.miner.setTexture('miner_powerup');
     AudioManager.play('powerUp');
-
     this.time.delayedCall(800, () => {
       this.miner.setTexture('miner_power');
-      this.powering = false;
       this.potionUseCount = 3;
     });
   }
 
   onTimerEnd = () => { // 타이머 끝난 후
-    this.gameOver = true;
     AudioManager.stopAll();
     if (GameManager.score < GameManager.targetScore) {
       this.scene.start('GameOverScene');
@@ -275,7 +264,7 @@ export default class MainScene extends Phaser.Scene {
     AudioManager.play('moneySound');
   }
 
-  createScoreText = () => {
+  createScoreText = () => { // 광물 점수 보여주는 함수
     this.scoreText = createText(this, 550, 100, `+${this.attachedObject.price}`, 32);
 
     this.tweens.add({

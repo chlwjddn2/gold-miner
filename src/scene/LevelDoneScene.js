@@ -19,8 +19,8 @@ export default class LevelDoneScene extends Phaser.Scene {
     this.nexLevelButton = this.add.image(center.x + 120, center.y + 260, 'next_button').setInteractive({ useHandCursor: true });
 
     // 텍스트 생성
-    createText(this, 395, 364, `${GameManager.level}단계`, 54, '#6E2802')
-    createText(this, 462, 474, `${GameManager.score}`, 68, '#fff')
+    createText(this, 395, 364, `${GameManager.level}단계`, 54, '#6E2802');
+    createText(this, 462, 474, `${GameManager.score}`, 68, '#fff');
     
     this.addEvent();
   }
@@ -34,7 +34,6 @@ export default class LevelDoneScene extends Phaser.Scene {
 
     this.storeButton.on('pointerdown', () => {
       AudioManager.play('clickSound');
-      this.scene.stop('GameStoreScene');
       this.scene.start('GameStoreScene');
     })
 

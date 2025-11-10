@@ -1,3 +1,5 @@
+import { createText } from '../utils.js';
+
 export default class Timer {
   constructor(scene, x, y, duration, onEndCallback) {
     this.scene = scene;
@@ -6,14 +8,8 @@ export default class Timer {
 
     // 텍스트 UI 생성
     this.timerBg = scene.add.image(x, y, 'timer_bg');
+    this.timerText = createText(this.scene, x + 18, y + 1, `${this.remainingTime}`, 28).setDepth(100).setOrigin(0.5);
     
-    this.timerText = scene.add.text(x + 18, y + 1, `${this.remainingTime}`, {
-      fontSize: '28px',
-      fill: '#fff',
-      fontFamily: 'Cafe24Surround',
-      fontStyle: 'bold'
-    }).setDepth(100).setOrigin(0.5);
-
     this.timerEvent = scene.time.addEvent({
       delay: 1000,
       loop: true,

@@ -74,7 +74,7 @@ export default class PreloadScene extends Phaser.Scene {
     // 음원 로드
     this.load.audio('bgmSound', './audio/bgm.mp3');
     this.load.audio('ropeSound', './audio/rope.mp3');
-    this.load.audio('wrongSound', './audio/wrong.mp3');
+    this.load.audio('wrongSound', './audio/wrong.mp3'); 
     this.load.audio('correctSound', './audio/correct.mp3');
     this.load.audio('ropeShrinkingSound', './audio/rope_shirking.mp3');
     this.load.audio('moneySound', './audio/money.mp3');
@@ -84,16 +84,14 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.audio('win', './audio/win.mp3');
     this.load.audio('clickSound', './audio/click.mp3');
 
-    this.loading();
+    this.loading(); // 로드될때까지 로딩 
   }
 
   create = async () =>{
-    const fontsToLoad = [
-      document.fonts.load('16px "Cafe24Surround"'),
-    ];
-
-    await Promise.all(fontsToLoad);
-    await document.fonts.ready; // 
+    // CSS @font-face로 등록된 폰트가 로드될 때까지 대기
+    await document.fonts.load('16px "Cafe24Surround"');
+    await document.fonts.ready;  
+    
     // audio manager에 음원 등록
     AudioManager.registerScene(this);
     AudioManager.add('bgmSound', { volume: 0.1 });
@@ -115,48 +113,60 @@ export default class PreloadScene extends Phaser.Scene {
     this.time.delayedCall(300, () => this.scene.start('GameStartScene'));
   }
 
-  loading = () => { // loading bar 생성 함수
-    const size = { 
-      width: 500, 
-      height: 30, 
-      boxStroke: 3, 
-      barStroke: 2 
+  loading = () => { // 로딩 바 함수
+    const size = {
+      width: 500,
+      height: 30,
+      boxStroke: 3,
+      barStroke: 2,
     };
 
-    const center = { 
-      x: this.cameras.main.width / 2 - size.width / 2, 
-      y: this.cameras.main.height / 2 - size.height / 2
+    const cam = this.cameras.main;
+    const center = {
+      x: cam.width / 2 - size.width / 2,
+      y: cam.height / 2 - size.height / 2,
     };
 
-    this.loadingMiner = this.add.sprite(this.cameras.main.width / 2, center.y - 20, 'loading_miner').setScale(0.5);
-
-    this.loadingMiner.anims.create({
-      key: 'loading_move',
-      frames: this.anims.generateFrameNumbers('loading_miner', { start: 0, end: 2 }),
-      frameRate: 10,
-      repeat: -1
-    });
-
-    this.loadingMiner.play('loading_move');
+    const padding = 3; 
+    const innerHeight = size.height - padding * 2;
+    const innerX = center.x + padding;
+    const innerY = center.y + padding;
 
     const loadingBox = this.add.graphics();
-
-    loadingBox.fillStyle(0xffffff, 1); 
-    loadingBox.fillRoundedRect(center.x, center.y, size.width, size.height, size.height / 2);
-    loadingBox.lineStyle(size.boxStroke, 0x94ccdc, 1); 
-    loadingBox.strokeRoundedRect(center.x, center.y, size.width, size.height, size.height / 2);
-
     const loadingBar = this.add.graphics();
 
-    this.load.on('progress', (value) => {
-      loadingBar.clear();
-      loadingBar.fillStyle(0x94ccdc, 1);
-      const innerWidth = (size.width - 6) * value;
-      loadingBar.fillRoundedRect(center.x + 3, center.y + 3, Math.max(size.height - 6, innerWidth), size.height - 6, (size.height - 6) / 2);
-      loadingBar.lineStyle(size.barStroke, 0xffffff, 0.7);
-      loadingBar.strokeRoundedRect(center.x + 3, center.y + 3, Math.max(size.height - 6, innerWidth), size.height - 6, (size.height - 6) / 2);
+    // 캐릭터 설정
+    this.loadingMiner = this.add.sprite(cam.width / 2, center.y - 20, "loading_miner").setScale(0.5);
 
-      this.loadingMiner.x = center.x +  Math.max(size.height - 6, innerWidth);
+    this.loadingMiner.anims.create({
+      key: "loading_move",
+      frames: this.anims.generateFrameNumbers("loading_miner", { start: 0, end: 2 }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.loadingMiner.play("loading_move");
+
+    // 로딩 박스
+    loadingBox.fillStyle(0xffffff, 1);
+    loadingBox.fillRoundedRect(center.x, center.y, size.width, size.height, size.height / 2);
+    loadingBox.lineStyle(size.boxStroke, 0x94ccdc, 1);
+    loadingBox.strokeRoundedRect(center.x, center.y, size.width, size.height, size.height / 2);
+
+    // 로딩 진행
+    this.load.on("progress", (value) => {
+      loadingBar.clear();
+
+      const innerWidth = (size.width - padding * 2) * value;
+      const barWidth = Math.max(innerHeight, innerWidth);
+
+      loadingBar.fillStyle(0x94ccdc, 1);
+      loadingBar.fillRoundedRect(innerX, innerY, barWidth, innerHeight, innerHeight / 2);
+
+      loadingBar.lineStyle(size.barStroke, 0xffffff, 0.7);
+      loadingBar.strokeRoundedRect(innerX, innerY, barWidth, innerHeight, innerHeight / 2);
+
+      this.loadingMiner.x = innerX + barWidth;
     });
   };
 }

@@ -30,7 +30,6 @@ export default class GameOverScene extends Phaser.Scene {
     this.homeButton.on('pointerover', () => this.homeButton.setScale(1.1));
 
     this.homeButton.on('pointerdown', () => {
-      this.scene.stop();
       this.scene.start('GameStartScene');
       GameManager.reset();
     })

@@ -37,7 +37,6 @@ export default class GameStoreScene extends Phaser.Scene {
 
     this.nexLevelButton.on('pointerdown', () => {
       GameManager.levelUp(); 
-      this.scene.stop('GameStoreScene');
       this.scene.start('GameMainScene');
     })
   }
