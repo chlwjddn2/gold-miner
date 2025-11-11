@@ -9,6 +9,9 @@ export default class GameStartScene extends Phaser.Scene {
 
   create = () => {
     this.introBackground = this.add.image(0, 0, 'intro_bg').setOrigin(0, 0); 
+    this.introVideo = this.add.video(this.cameras.main.width / 2, this.cameras.main.height / 2, 'intro_video').setOrigin(0.5)
+    this.introVideo.setScale(0.75);
+
     this.playButton = this.add.image(235, 600, 'play_button').setScale(0.6).setInteractive({ useHandCursor: true });
     this.howToGameButton = this.add.image(480, 600, 'howto_button').setScale(0.6).setInteractive({ useHandCursor: true });
     this.bgmButton = new BgmButton(this, 80, 60);
@@ -16,6 +19,10 @@ export default class GameStartScene extends Phaser.Scene {
     
     this.createAnimation(); // animation
     this.addEvent(); // event
+
+    this.introVideo.setMute(true);
+    this.introVideo.setLoop(true)
+    this.introVideo.play();
   }
 
   createAnimation = () => { // 애니메이션 생성
@@ -32,10 +39,7 @@ export default class GameStartScene extends Phaser.Scene {
     this.playButton.on('pointerout', () => this.playButton.setScale(0.6))
     this.howToGameButton.on('pointerout', () => this.howToGameButton.setScale(0.6))
     this.howToGameButton.on('pointerover', () => this.howToGameButton.setScale(0.65));
-    this.howToGameButton.on('pointerdown', () => {
-
-      gameEvents.emit('howto')
-    });
+    this.howToGameButton.on('pointerdown', () => gameEvents.emit('howto'));
     this.playButton.on('pointerdown', () => {
       AudioManager.play('clickSound');
       gameEvents.emit('playGame');
