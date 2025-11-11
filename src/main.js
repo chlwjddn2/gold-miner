@@ -1,5 +1,5 @@
 import './style.css'
-import Phaser from 'phaser';
+import { CANVAS, Scene } from 'phaser';
 import { gsap } from 'gsap/all';
 import { gameEvents } from './manager/EventManager.js';
 import GameStartScene from './scene/GameStartScene.js';
@@ -17,7 +17,7 @@ import Quiz from './Quiz';
 
 export default class GoldMinerMain {
   #config = {
-    type: Phaser.CANVAS,
+    type: CANVAS,
     width: 1280,
     height: 720,
     backgroundColor: '#c9effa',
@@ -43,21 +43,22 @@ export default class GoldMinerMain {
         constraintIterations: 2,
       }
     },
-    // scale: {
-    //   mode: Phaser.Scale.FIT,         // 비율 유지하면서 화면에 꽉 차게
-    //   autoCenter: Phaser.Scale.CENTER_BOTH, // 자동 중앙 정렬
-    // },
+    scale: {
+      mode: Phaser.Scale.FIT,         // 비율 유지하면서 화면에 꽉 차게
+      autoCenter: Phaser.Scale.CENTER_BOTH, // 자동 중앙 정렬
+    },
     pixelArt: false,
   }
 
   constructor() {
     // 게임 방법 팝업
-    this.howToContainer = document.querySelector(`.howto-container`);
-    this.howToCloseButton = this.howToContainer.querySelector(`.closeButton`);
+    this.howToPopup = document.querySelector(`.howto-popup`);
+    this.howToCloseButton = this.howToPopup.querySelector(`.closeButton`);
     this.gameContainer = document.querySelector('.game-container');
+    this.popupContainer = document.querySelector('.popup-container');
 
     // 퀴즈
-    this.quizContainer = document.querySelector(`.quiz-container`);
+    this.quizPopup = document.querySelector(`.quiz-popup`);
     this.wrap = document.querySelector('#wrap');
     
     this.init();
@@ -83,27 +84,27 @@ export default class GoldMinerMain {
   }
    
   showHowToPopup = (bool) => { // 게임방법 팝업
-    const innerContaion = this.howToContainer.querySelector('.howto-inner');
+    const innerContaion = this.howToPopup.querySelector('.howto-inner');
     if (bool) {
-      this.howToContainer.classList.add('show');
+      this.howToPopup.classList.add('show');
       gsap.fromTo(innerContaion, {top: '150%'}, {top: '50%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)"});
     } else {
       gsap.fromTo(innerContaion, {top: '50%'}, {top: '150%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)", onComplete: () => { 
-        this.howToContainer.classList.remove('show');
+        this.howToPopup.classList.remove('show');
       }});
     }
   }
 
   showQuizPopup = (bool) => { // 퀴즈 팝업
-    const quizInner = this.quizContainer.querySelector('.quiz-inner');
+    const quizInner = this.quizPopup.querySelector('.quiz-inner');
     gsap.killTweensOf(quizInner);
     if (bool) {
-      this.quizContainer.classList.add('show');
+      this.quizPopup.classList.add('show');
       gsap.fromTo(quizInner, {top: '150%'}, {top: '50%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)"});
     } 
     else {
       gsap.fromTo(quizInner, {top: '50%'}, {top: '150%', duration: 1.3, ease: "elastic.inOut(0.1 ,0.1)", onComplete: () => { 
-        this.quizContainer.classList.remove('show');
+        this.quizPopup.classList.remove('show');
       }});
     }
   }
@@ -111,14 +112,14 @@ export default class GoldMinerMain {
   resizeContent = () => { // 스케일 조절 함수
     if (1280 / 720 <= document.body.clientWidth / document.body.clientHeight) {
       this.ratio = document.body.clientHeight / 720;
-      this.wrap.style.top = `0px`
-      this.wrap.style.left = `${(document.body.clientWidth - 1280 * this.ratio) / 2}px`
-      this.wrap.style.scale = `${this.ratio}`
+      this.popupContainer.style.top = `0px`
+      this.popupContainer.style.left = `${(document.body.clientWidth - 1280 * this.ratio) / 2}px`
+      this.popupContainer.style.scale = `${this.ratio}`
     } else {
       this.ratio = document.body.clientWidth / 1280;
-      this.wrap.style.top = `${(document.body.clientHeight - 720 * this.ratio) / 2}px`
-      this.wrap.style.left = `0px`
-      this.wrap.style.scale = `${this.ratio}`
+      this.popupContainer.style.top = `${(document.body.clientHeight - 720 * this.ratio) / 2}px`
+      this.popupContainer.style.left = `0px`
+      this.popupContainer.style.scale = `${this.ratio}`
     }
   }
 

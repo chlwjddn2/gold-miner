@@ -91,29 +91,37 @@ button {
 }
 
 #wrap {
-  width: 1280px;
-  height: 720px;
+  width: 100%;
+  height: 100%;
   position: relative;
   overflow: hidden;
-  transform-origin: 0% 0%;
 }
 
-[class*="container"] {
-  position: absolute; 
-  top: 0; 
-  left: 0; 
-  display: flex; 
-  justify-content: center;
-  align-items: center;
+.game-container {
   width: 100%; 
+  height: 100%;
+  position: relative; 
+}
+
+.popup-container {
+  width: 1280px;
+  height: 720px;
+  transform-origin: 0% 0%;
+  position: absolute;
+  overflow: hidden;
+}
+
+.howto-popup,
+.quiz-popup {
+  width: 100%;
   height: 100%;
   display: none;
 }
 
-[class*="container"].show {
+.howto-popup.show,
+.quiz-popup.show {
   display: flex;
 }
-
 
 [class*="inner"] {
   position: absolute;

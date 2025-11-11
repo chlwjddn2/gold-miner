@@ -13,7 +13,6 @@ export default class GameStartScene extends Phaser.Scene {
     this.howToGameButton = this.add.image(480, 600, 'howto_button').setScale(0.6).setInteractive({ useHandCursor: true });
     this.bgmButton = new BgmButton(this, 80, 60);
     this.title = this.add.image(400, 250, 'intro_title').setOrigin(0.5, 0.5).setScale(0);
-
     
     this.createAnimation(); // animation
     this.addEvent(); // event
@@ -33,7 +32,10 @@ export default class GameStartScene extends Phaser.Scene {
     this.playButton.on('pointerout', () => this.playButton.setScale(0.6))
     this.howToGameButton.on('pointerout', () => this.howToGameButton.setScale(0.6))
     this.howToGameButton.on('pointerover', () => this.howToGameButton.setScale(0.65));
-    this.howToGameButton.on('pointerdown', () => gameEvents.emit('howto'));
+    this.howToGameButton.on('pointerdown', () => {
+
+      gameEvents.emit('howto')
+    });
     this.playButton.on('pointerdown', () => {
       AudioManager.play('clickSound');
       gameEvents.emit('playGame');

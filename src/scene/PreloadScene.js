@@ -39,6 +39,11 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('intro_bg', './images/intro/intro_bg.png');   
     this.load.image('intro_title', './images/intro/intro_title.png');
 
+    this.load.image('howto_bg', './images/intro/intro_howto_bg.png');
+    this.load.image('howto_bubbld1', './images/intro/intro_bubbld1.png');
+    this.load.image('howto_bubbld2', './images/intro/intro_bubbld2.png');
+    this.load.image('howto_bubbld3', './images/intro/intro_bubbld3.png');
+
     // finish scene
     this.load.image('finish_bg', './images/finish/miner_finish_bg.png');
     this.load.image('complete', './images/finish/miner_complete.png');

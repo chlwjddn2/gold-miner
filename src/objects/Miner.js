@@ -37,7 +37,7 @@ export default class Miner {
     // 집게 생성
     this.clamp = this.scene.matter.add.sprite(614, this.rope.y + 60, 'clamp')
       .setDepth(20)
-      .setCircle(10)
+      .setCircle(15)
       .setFrame(1);
 
     // 애니메이션 등록

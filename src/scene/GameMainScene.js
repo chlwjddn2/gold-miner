@@ -164,7 +164,7 @@ export default class MainScene extends Phaser.Scene {
     const sprite = this.add.image(x, y, type).setInteractive({ useHandCursor: true });
 
     const offsetX = type  === 'dynamite' ? sprite.displayWidth / 2 - 35 : sprite.displayWidth / 2 - 31;
-    const offsetY = -sprite.displayHeight / 2 + 20;
+    const offsetY = -sprite.displayHeight / 2 + 18;
     const count = type  === 'dynamite' ? GameManager.dynamite : GameManager.potion;
          
     const xText = sprite.x + offsetX;
